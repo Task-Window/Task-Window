@@ -1,0 +1,809 @@
+/* =====================================================
+   NEXtasko POST TASK PAGE
+===================================================== */
+
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: #f6f8fc;
+    color: #202124;
+    overflow-x: hidden;
+}
+
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.navbar {
+    width: 100%;
+    min-height: 70px;
+}
+
+
+.navbar-brand {
+    font-size: 24px;
+    color: #1d4ed8 !important;
+}
+
+
+.brand-icon {
+    margin-right: 7px;
+}
+
+
+.nav-link {
+    font-weight: 500;
+    margin-left: 12px;
+}
+
+
+.nav-link.active {
+    color: #1d4ed8 !important;
+}
+
+
+.navbar .btn-primary {
+    border-radius: 8px;
+    padding: 9px 20px;
+}
+
+
+
+/* =====================================================
+   PAGE HEADER
+===================================================== */
+
+.page-header {
+    width: 100%;
+    background: linear-gradient(
+        135deg,
+        #1d4ed8,
+        #2563eb
+    );
+
+    padding: 55px 5%;
+}
+
+
+.page-header-content {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+
+.page-header h1 {
+    color: white;
+    font-size: 38px;
+    font-weight: 700;
+    margin: 0 0 10px;
+}
+
+
+.page-header p {
+    color: rgba(255,255,255,0.9);
+    font-size: 16px;
+    margin: 0;
+    max-width: 700px;
+}
+
+
+
+/* =====================================================
+   MAIN LAYOUT
+===================================================== */
+
+.main-wrapper {
+    width: 100%;
+    max-width: 1500px;
+
+    margin: 40px auto;
+
+    padding-left: 5%;
+    padding-right: 5%;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.8fr)
+        minmax(320px, 0.9fr);
+
+    gap: 30px;
+
+    align-items: start;
+}
+
+
+
+/* =====================================================
+   CARDS
+===================================================== */
+
+.task-card,
+.pricing-card {
+    background: white;
+
+    border-radius: 16px;
+
+    border: 1px solid #e5e7eb;
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,0.05);
+
+    width: 100%;
+}
+
+
+
+/* =====================================================
+   TASK CARD
+===================================================== */
+
+.card-header-custom {
+    padding: 28px 32px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.card-header-custom h2 {
+    font-size: 22px;
+    font-weight: 600;
+
+    margin: 0 0 7px;
+}
+
+
+.card-header-custom h2 i {
+    color: #2563eb;
+    margin-right: 8px;
+}
+
+
+.card-header-custom p {
+    margin: 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+
+.card-body-custom {
+    padding: 32px;
+}
+
+
+
+/* =====================================================
+   FORM
+===================================================== */
+
+.form-group-custom {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+
+.form-group-custom label {
+    display: block;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    margin-bottom: 8px;
+
+    color: #374151;
+}
+
+
+.form-control,
+.form-select {
+    width: 100%;
+
+    min-height: 48px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 9px;
+
+    padding: 11px 14px;
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 14px;
+
+    box-shadow: none;
+}
+
+
+textarea.form-control {
+    min-height: 140px;
+
+    resize: vertical;
+}
+
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,0.1);
+}
+
+
+.form-group-custom small {
+    display: block;
+
+    margin-top: 7px;
+
+    font-size: 12px;
+
+    color: #6b7280;
+}
+
+
+.optional {
+    color: #9ca3af;
+
+    font-weight: 400;
+}
+
+
+
+/* =====================================================
+   TWO COLUMN FORM ROW
+===================================================== */
+
+.form-grid-2 {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 24px;
+
+    width: 100%;
+}
+
+
+
+/* =====================================================
+   BUDGET
+===================================================== */
+
+.budget-box {
+    width: 100%;
+
+    padding: 24px;
+
+    margin-top: 10px;
+
+    border-radius: 12px;
+
+    background: #eff6ff;
+
+    border: 1px solid #bfdbfe;
+}
+
+
+.budget-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    margin-bottom: 18px;
+}
+
+
+.budget-title > i,
+.budget-title > .fa-wallet {
+    font-size: 24px;
+
+    color: #2563eb;
+}
+
+
+.budget-title h3 {
+    margin: 0;
+
+    font-size: 18px;
+
+    font-weight: 600;
+}
+
+
+.budget-title p {
+    margin: 3px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+.budget-input-wrapper {
+    position: relative;
+
+    width: 100%;
+}
+
+
+.budget-input-wrapper span {
+    position: absolute;
+
+    left: 16px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    color: #374151;
+}
+
+
+.budget-input-wrapper input {
+    width: 100%;
+
+    min-height: 55px;
+
+    border: 1px solid #bfdbfe;
+
+    border-radius: 9px;
+
+    padding: 12px 15px 12px 38px;
+
+    font-size: 18px;
+
+    font-weight: 500;
+}
+
+
+.budget-input-wrapper input:focus {
+    outline: none;
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37,99,235,0.1);
+}
+
+
+.budget-note {
+    margin: 12px 0 0;
+
+    font-size: 12px;
+
+    color: #64748b;
+}
+
+
+
+/* =====================================================
+   POST BUTTON
+===================================================== */
+
+.post-button-wrapper {
+    margin-top: 28px;
+
+    display: flex;
+
+    justify-content: flex-end;
+}
+
+
+.btn-post-task {
+    border: none;
+
+    border-radius: 9px;
+
+    padding: 13px 28px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+
+.btn-post-task:hover {
+    background: #1d4ed8;
+
+    transform: translateY(-1px);
+}
+
+
+
+/* =====================================================
+   SMART PRICING CARD
+===================================================== */
+
+.pricing-card {
+    position: sticky;
+
+    top: 25px;
+
+    overflow: hidden;
+}
+
+
+.pricing-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 25px;
+
+    background: #f8fafc;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.pricing-icon {
+    width: 46px;
+
+    height: 46px;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #dbeafe;
+
+    color: #2563eb;
+
+    font-size: 20px;
+}
+
+
+.pricing-header h2 {
+    margin: 0;
+
+    font-size: 20px;
+
+    font-weight: 600;
+}
+
+
+.pricing-header p {
+    margin: 3px 0 0;
+
+    font-size: 12px;
+
+    color: #6b7280;
+}
+
+
+
+/* =====================================================
+   PRICE ITEMS
+===================================================== */
+
+.price-item {
+    padding: 22px 25px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.price-label {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+}
+
+
+.price-icon {
+    width: 36px;
+
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #f1f5f9;
+
+    color: #475569;
+}
+
+
+.price-label strong {
+    display: block;
+
+    font-size: 14px;
+}
+
+
+.price-label small {
+    display: block;
+
+    margin-top: 2px;
+
+    font-size: 11px;
+
+    color: #9ca3af;
+}
+
+
+.price-item h3 {
+    margin: 15px 0 0;
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    color: #1d4ed8;
+}
+
+
+.suggested-item {
+    background: #f8fafc;
+}
+
+
+
+/* =====================================================
+   CUSTOMER PRICE PREVIEW
+===================================================== */
+
+.customer-price-preview {
+    margin: 20px 25px;
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    background: #f1f5f9;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.customer-price-preview span {
+    font-size: 13px;
+
+    font-weight: 500;
+}
+
+
+.customer-price-preview strong {
+    font-size: 18px;
+
+    color: #111827;
+}
+
+
+
+/* =====================================================
+   PRICING EXPLANATION
+===================================================== */
+
+.pricing-explanation {
+    padding: 22px 25px;
+}
+
+
+.pricing-explanation h4 {
+    margin: 0 0 14px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+
+.pricing-explanation p {
+    margin: 8px 0;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+    color: #6b7280;
+}
+
+
+.pricing-explanation .final-note {
+    color: #2563eb;
+}
+
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer {
+    width: 100%;
+
+    padding: 25px 5%;
+
+    background: #111827;
+
+    color: #9ca3af;
+
+    text-align: center;
+
+    font-size: 13px;
+
+    margin-top: 50px;
+}
+
+
+.footer strong {
+    color: white;
+}
+
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1100px) {
+
+    .main-wrapper {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .pricing-card {
+
+        position: static;
+
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .page-header {
+
+        padding: 40px 6%;
+
+    }
+
+
+    .page-header h1 {
+
+        font-size: 30px;
+
+    }
+
+
+    .main-wrapper {
+
+        padding-left: 4%;
+        padding-right: 4%;
+
+        margin-top: 25px;
+
+    }
+
+
+    .card-body-custom {
+
+        padding: 22px;
+
+    }
+
+
+    .card-header-custom {
+
+        padding: 22px;
+
+    }
+
+
+    .form-grid-2 {
+
+        grid-template-columns: 1fr;
+
+        gap: 0;
+
+    }
+
+
+    .post-button-wrapper {
+
+        justify-content: stretch;
+
+    }
+
+
+    .btn-post-task {
+
+        width: 100%;
+
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .main-wrapper {
+
+        padding-left: 3%;
+        padding-right: 3%;
+
+    }
+
+
+    .page-header h1 {
+
+        font-size: 26px;
+
+    }
+
+
+    .pricing-header {
+
+        padding: 20px;
+
+    }
+
+
+    .price-item {
+
+        padding: 20px;
+
+    }
+
+}
