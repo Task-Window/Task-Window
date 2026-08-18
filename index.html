@@ -1,137 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexTasko</title>
-
+    <meta name="description" content="NexTasko - Post fixed-price tasks and find skilled workers. The smart way to get things done.">
+    <title>NexTasko | The Smart Way to Get Things Done</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-    <!-- Navigation -->
-
     <header>
-
-        <div class="logo">
-            NexTasko
-        </div>
-
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">Browse Tasks</a>
-            <a href="#">Post a Task</a>
-            <a href="#">How It Works</a>
-            <a href="#">Login</a>
+        <a class="logo" href="index.html">NexTasko</a>
+        <nav aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="browse-tasks.html">Browse Tasks</a>
+            <a href="post-task.html">Post a Task</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#login">Login</a>
         </nav>
-
     </header>
 
-    <!-- Hero -->
-
-    <section class="hero">
-
-        <h1>Get Your Tasks Done at a Fixed Price</h1>
-
-        <p>
-            Post your task, choose a fixed budget, and get it completed quickly by skilled and trusted workers.
-        </p>
-
-       <div class="buttons">
-
-    <a href="post-task.html" class="primary">Post a Task</a>
-
-    <a href="browse-tasks.html" class="secondary">Browse Tasks</a>
-
-</div>
-
-    </section>
-
-    <!-- Categories -->
-
-    <section class="services">
-
-        <h2>Popular Categories</h2>
-
-        <div class="grid">
-
-            <div class="card">📊 Data Entry</div>
-
-            <div class="card">🎨 Graphic Design</div>
-
-            <div class="card">💻 Web Development</div>
-
-            <div class="card">📱 App Development</div>
-
-            <div class="card">📹 Video Editing</div>
-
-            <div class="card">📝 Content Writing</div>
-
-            <div class="card">📄 Resume & CV Writing</div>
-
-            <div class="card">🎬 PPT Design</div>
-
-            <div class="card">📚 Assignment Help</div>
-
-            <div class="card">👨‍🏫 Online Tutoring</div>
-
-            <div class="card">🔬 Research Assistant</div>
-
-            <div class="card">🌐 Translation</div>
-
-            <div class="card">📈 Digital Marketing</div>
-
-            <div class="card">🤖 AI & Automation</div>
-
-            <div class="card">📑 PDF to Word Conversion</div>
-
-            <div class="card">📊 Excel & Spreadsheet Work</div>
-
-        </div>
-
-    </section>
-
-    <!-- How it Works -->
-
-    <section class="steps">
-
-        <h2>How NexTasko Works</h2>
-
-        <div class="step-box">
-
-            <div class="step">
-                <h3>1. Post a Task</h3>
-                <p>Describe your work and set a fixed price.</p>
+    <main>
+        <section class="hero">
+            <h1>Get Your Tasks Done at a Fixed Price</h1>
+            <p>Post your task, choose a fixed budget, and get it completed quickly by skilled and trusted workers.</p>
+            <div class="buttons">
+                <a href="post-task.html" class="primary">Post a Task</a>
+                <a href="browse-tasks.html" class="secondary">Browse Tasks</a>
             </div>
+        </section>
 
-            <div class="step">
-                <h3>2. Choose a Worker</h3>
-                <p>Interested workers apply, and you select the best one.</p>
+        <section class="services" aria-labelledby="categories-title">
+            <h2 id="categories-title">Popular Categories</h2>
+            <div class="grid">
+                <a class="card" href="browse-tasks.html?category=Data%20Entry">📊 Data Entry</a>
+                <a class="card" href="browse-tasks.html?category=Graphic%20Design">🎨 Graphic Design</a>
+                <a class="card" href="browse-tasks.html?category=Web%20Development">💻 Web Development</a>
+                <a class="card" href="browse-tasks.html?category=App%20Development">📱 App Development</a>
+                <a class="card" href="browse-tasks.html?category=Video%20Editing">📹 Video Editing</a>
+                <a class="card" href="browse-tasks.html?category=Content%20Writing">📝 Content Writing</a>
+                <a class="card" href="browse-tasks.html?category=Resume%20%26%20CV%20Writing">📄 Resume &amp; CV Writing</a>
+                <a class="card" href="browse-tasks.html?category=PPT%20Design">🎬 PPT Design</a>
+                <a class="card" href="browse-tasks.html?category=Assignment%20Help">📚 Assignment Help</a>
+                <a class="card" href="browse-tasks.html?category=Online%20Tutoring">👨‍🏫 Online Tutoring</a>
+                <a class="card" href="browse-tasks.html?category=Research%20Assistant">🔬 Research Assistant</a>
+                <a class="card" href="browse-tasks.html?category=Translation">🌐 Translation</a>
+                <a class="card" href="browse-tasks.html?category=Digital%20Marketing">📈 Digital Marketing</a>
+                <a class="card" href="browse-tasks.html?category=AI%20%26%20Automation">🤖 AI &amp; Automation</a>
+                <a class="card" href="browse-tasks.html?category=PDF%20to%20Word%20Conversion">📑 PDF to Word Conversion</a>
+                <a class="card" href="browse-tasks.html?category=Excel%20%26%20Spreadsheet%20Work">📊 Excel &amp; Spreadsheet Work</a>
             </div>
+        </section>
 
-            <div class="step">
-                <h3>3. Get Your Work Done</h3>
-                <p>Review the completed work and release the payment securely.</p>
+        <section class="steps" id="how-it-works" aria-labelledby="steps-title">
+            <h2 id="steps-title">How NexTasko Works</h2>
+            <div class="step-box">
+                <div class="step"><h3>1. Post a Task</h3><p>Describe your work and set a fixed price.</p></div>
+                <div class="step"><h3>2. Choose a Worker</h3><p>Interested workers apply, and you select the best one.</p></div>
+                <div class="step"><h3>3. Get Your Work Done</h3><p>Review the completed work and release the payment securely.</p></div>
             </div>
+        </section>
+    </main>
 
-        </div>
-
-    </section>
-
-    <!-- Footer -->
-
-    <footer>
-
+    <footer id="login">
         <h3>NexTasko</h3>
-
         <p>The Smart Way to Get Things Done</p>
-
         <p>© 2026 NexTasko. All Rights Reserved.</p>
-
     </footer>
-
 </body>
-
 </html>
