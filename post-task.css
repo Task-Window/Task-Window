@@ -867,3 +867,6 @@ body{background:#f8f4ea!important}
 .form-control,.form-select{background:#fffefb!important}
 .help-chat-panel{background:#fffdf8!important}
 .help-chat-options button{background:#fbf6e9!important}
+
+.navbar-brand .logo-tagline{padding-left:13px;border-left:1px solid rgba(213,166,56,.65);font-size:15px;line-height:1.28;letter-spacing:.2px;color:#8a6418;font-weight:750}
+@media(max-width:768px){.navbar-brand .logo-tagline{font-size:13px;padding-left:10px}}
