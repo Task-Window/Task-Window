@@ -1,354 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Task-Window | Login</title>
-
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
-    <link rel="stylesheet" href="login.css">
-</head>
-
-<body>
-
-<div class="auth-page">
-
-    <div class="auth-card">
-
-        <div class="auth-logo">
-            <a href="index.html">
-                <img src="assets/task-window-logo.png"
-                     alt="Task-Window logo">
-            </a>
-
-            <h1>Welcome to Task-Window</h1>
-            <p>The Smart Way to Get Things Done</p>
-        </div>
-
-        <!-- LOGIN -->
-
-        <div id="loginSection">
-
-            <h2>Login</h2>
-
-            <form id="loginForm">
-
-                <div class="form-group">
-                    <label for="loginEmail">
-                        Email Address
-                    </label>
-
-                    <input
-                        type="email"
-                        id="loginEmail"
-                        placeholder="Enter your email"
-                        required>
-                </div>
-
-                <div class="form-group">
-
-                    <label for="loginPassword">
-                        Password
-                    </label>
-
-                    <div class="password-box">
-
-                        <input
-                            type="password"
-                            id="loginPassword"
-                            placeholder="Enter your password"
-                            required>
-
-                        <button
-                            type="button"
-                            id="toggleLoginPassword">
-                            <i class="fa-solid fa-eye"></i>
-                        </button>
-
-                    </div>
-
-                </div>
-
-                <button
-                    type="submit"
-                    class="auth-button"
-                    id="loginButton">
-
-                    <i class="fa-solid fa-right-to-bracket"></i>
-                    Login
-
-                </button>
-
-            </form>
-
-            <p class="auth-message"
-               id="loginMessage"></p>
-
-            <div class="forgot-password">
-                <a href="#" id="forgotPassword">
-                    Forgot Password?
-                </a>
-            </div>
-
-            <div class="switch-auth">
-
-                <span>Don't have an account?</span>
-
-                <button
-                    type="button"
-                    id="showSignup">
-
-                    Create Account
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- SIGN UP -->
-
-        <div id="signupSection" hidden>
-
-            <h2>Create Account</h2>
-
-            <form id="signupForm">
-
-                <div class="form-group">
-
-                    <label for="signupName">
-                        Full Name
-                    </label>
-
-                    <input
-                        type="text"
-                        id="signupName"
-                        placeholder="Enter your full name"
-                        required>
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="signupEmail">
-                        Email Address
-                    </label>
-
-                    <input
-                        type="email"
-                        id="signupEmail"
-                        placeholder="Enter your email"
-                        required>
-
-                </div>
-
-                <div class="form-group">
-
-                    <label for="signupPassword">
-                        Password
-                    </label>
-
-                    <div class="password-box">
-
-                        <input
-                            type="password"
-                            id="signupPassword"
-                            placeholder="Create a password"
-                            minlength="6"
-                            required>
-
-                        <button
-                            type="button"
-                            id="toggleSignupPassword">
-
-                            <i class="fa-solid fa-eye"></i>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-                <button
-                    type="submit"
-                    class="auth-button"
-                    id="signupButton">
-
-                    <i class="fa-solid fa-user-plus"></i>
-                    Create Account
-
-                </button>
-
-            </form>
-
-            <p class="auth-message"
-               id="signupMessage"></p>
-
-            <div class="switch-auth">
-
-                <span>Already have an account?</span>
-
-                <button
-                    type="button"
-                    id="showLogin">
-
-                    Login
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script src="supabase-config.js"></script>
-
-
-<script>
-
-const loginSection =
-    document.getElementById("loginSection");
-
-const signupSection =
-    document.getElementById("signupSection");
-
-
-// SWITCH TO SIGNUP
-
-document.getElementById("showSignup")
-    .addEventListener("click", () => {
-
-        loginSection.hidden = true;
-        signupSection.hidden = false;
-
-    });
-
-
-// SWITCH TO LOGIN
-
-document.getElementById("showLogin")
-    .addEventListener("click", () => {
-
-        signupSection.hidden = true;
-        loginSection.hidden = false;
-
-    });
-
-
-// PASSWORD VISIBILITY
-
-function setupPasswordToggle(buttonId, inputId) {
-
-    document.getElementById(buttonId)
-        .addEventListener("click", () => {
-
-            const input =
-                document.getElementById(inputId);
-
-            const icon =
-                document
-                .getElementById(buttonId)
-                .querySelector("i");
-
-            if (input.type === "password") {
-
-                input.type = "text";
-
-                icon.className =
-                    "fa-solid fa-eye-slash";
-
-            } else {
-
-                input.type = "password";
-
-                icon.className =
-                    "fa-solid fa-eye";
-
-            }
-
-        });
-
-}
-
-
-setupPasswordToggle(
-    "toggleLoginPassword",
-    "loginPassword"
-);
-
-
-setupPasswordToggle(
-    "toggleSignupPassword",
-    "signupPassword"
-);
-
-
-// LOGIN
-
-document.getElementById("loginForm")
-.addEventListener("submit", async (event) => {
-
-    event.preventDefault();
-
-    const email =
-        document.getElementById("loginEmail").value.trim();
-
-    const password =
-        document.getElementById("loginPassword").value;
-
-    const message =
-        document.getElementById("loginMessage");
-
-    message.textContent = "Logging in...";
-
-    const { data, error } =
-    await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-    });
-
-if (error) {
-
-    message.textContent =
-        error.message;
-
-    return;
-
-}
-
-if (!data.session) {
-
-    message.textContent =
-        "Login completed, but no active session was created. Please try again.";
-
-    return;
-
-}
-
-message.textContent =
-    "Login successful!";
-
-setTimeout(() => {
-
-    window.location.href =
-        "post-task.html";
-
-}, 500);
-
-});
 
 // SIGN UP
 
@@ -378,17 +27,10 @@ document.getElementById("signupForm")
 
             email,
             password,
-
             options: {
-
-                data: {
-                    full_name: name
-                }
-
+                data: { name }
             }
-
         });
-
 
     if (error) {
 
@@ -399,51 +41,33 @@ document.getElementById("signupForm")
 
     }
 
-
-    if (data.user) {
-
-        message.textContent =
-            "Account created! Please check your email to confirm your account.";
-
-    }
+    message.textContent =
+        "Account created! Please check your email to confirm your account.";
 
 });
 
-
 // FORGOT PASSWORD
 
-document.getElementById("forgotPassword")
-.addEventListener("click", async (event) => {
+document.getElementById("forgotPasswordForm")
+.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
     const email =
-        document.getElementById("loginEmail").value.trim();
+        document.getElementById("forgotEmail").value.trim();
 
     const message =
-        document.getElementById("loginMessage");
+        document.getElementById("forgotMessage");
 
-
-    if (!email) {
-
-        message.textContent =
-            "Enter your email address first.";
-
-        return;
-
-    }
-
+    message.textContent =
+        "Sending reset link...";
 
     const { error } =
-        await supabaseClient.auth
-        .resetPasswordForEmail(email, {
-
+        await supabaseClient.auth.resetPasswordForEmail(email, {
             redirectTo:
                 window.location.origin +
-                "/reset-password.html"
-
+                "/Task-Window/reset-password.html"
         });
-
 
     if (error) {
 
@@ -454,13 +78,7 @@ document.getElementById("forgotPassword")
 
     }
 
-
     message.textContent =
-        "Password reset instructions have been sent to your email.";
+        "Password reset link sent. Please check your email.";
 
 });
-
-</script>
-
-</body>
-</html>
