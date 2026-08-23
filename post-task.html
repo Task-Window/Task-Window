@@ -44,7 +44,59 @@
 <div class="customer-price-preview"><span>Your Price</span><strong id="customerPricePreview">₹0</strong></div>
 <div class="pricing-explanation"><h4>How pricing works</h4><p>Market Price reflects a typical range for the selected service.</p><p>Labour Price estimates the basic effort involved.</p><p class="final-note">You always decide the final price you want to offer.</p></div></aside>
 </main>
+
+<div class="help-chat" id="helpChat">
+  <section class="help-chat-panel" aria-label="Client help">
+    <div class="help-chat-header">
+      <div><strong>Need help?</strong><span>Quick answers for posting a task</span></div>
+      <button class="help-chat-close" type="button" aria-label="Close help chat">×</button>
+    </div>
+    <div class="help-chat-body" aria-live="polite">
+      <p class="help-chat-message">Hi! Choose a question below and I’ll help you post your task.</p>
+      <div class="help-chat-options">
+        <button type="button" data-answer="price">How do I choose a price?</button>
+        <button type="button" data-answer="details">What details should I add?</button>
+        <button type="button" data-answer="category">Which category should I choose?</button>
+        <button type="button" data-answer="file">Can I attach a file?</button>
+        <button type="button" data-answer="response">When will I get a response?</button>
+      </div>
+      <p class="help-chat-answer" hidden></p>
+    </div>
+  </section>
+  <button class="help-chat-toggle" type="button" aria-expanded="false" aria-controls="helpChat">
+    <span aria-hidden="true">💬</span><span>Help</span>
+  </button>
+</div>
+
 <footer class="footer">The Smart Way to Get Things Done</footer>
+
+<script>
+(() => {
+  const chat = document.getElementById("helpChat");
+  const toggle = chat.querySelector(".help-chat-toggle");
+  const close = chat.querySelector(".help-chat-close");
+  const answer = chat.querySelector(".help-chat-answer");
+  const answers = {
+    price: "Use the Smart Pricing panel as a guide, then enter the amount you are comfortable paying. Add enough detail so you receive better offers.",
+    details: "Add a clear task title, describe what you need, choose a deadline, and mention any important requirements or format.",
+    category: "Choose the category closest to your task. If none is exact, choose the nearest option and explain the task clearly in the description.",
+    file: "Yes. Use the Attach File field to add documents, images, or reference material that will help explain your task.",
+    response: "After you submit the form, we will review your task details and contact you using the email or phone number you provide."
+  };
+  const setOpen = (open) => {
+    chat.classList.toggle("is-open", open);
+    toggle.setAttribute("aria-expanded", String(open));
+  };
+  toggle.addEventListener("click", () => setOpen(!chat.classList.contains("is-open")));
+  close.addEventListener("click", () => setOpen(false));
+  chat.querySelectorAll("[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      answer.textContent = answers[button.dataset.answer];
+      answer.hidden = false;
+    });
+  });
+})();
+</script>
 <script src="pricing.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 </body></html>
