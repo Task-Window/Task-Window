@@ -314,29 +314,41 @@ document.getElementById("loginForm")
 
     message.textContent = "Logging in...";
 
-    const { error } =
-        await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-        });
+    const { data, error } =
+    await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+    });
 
-    if (error) {
-
-        message.textContent =
-            error.message;
-
-        return;
-
-    }
+if (error) {
 
     message.textContent =
-        "Login successful!";
+        error.message;
+
+    return;
+
+}
+
+if (!data.session) {
+
+    message.textContent =
+        "Login completed, but no active session was created. Please try again.";
+
+    return;
+
+}
+
+message.textContent =
+    "Login successful!";
+
+setTimeout(() => {
 
     window.location.href =
         "post-task.html";
 
-});
+}, 500);
 
+});
 
 // SIGN UP
 
