@@ -818,3 +818,27 @@ textarea.form-control {
     }
 
 }
+
+/* Task-Window visual refresh */
+:root{--tw-navy:#0b2450;--tw-blue:#153f7a;--tw-gold:#d5a638;--tw-page:#f5f8fc}
+body{background:var(--tw-page);color:#1b2940}
+.navbar{min-height:78px!important;border-bottom:1px solid rgba(213,166,56,.28)!important;box-shadow:0 3px 18px rgba(11,36,80,.07)}
+.navbar-brand{color:var(--tw-navy)!important;font-size:24px!important;letter-spacing:-.5px}
+.task-window-logo{width:48px!important;height:48px!important}
+.nav-link{border-radius:8px;padding:8px 12px!important;color:#42536c!important}
+.nav-link:hover,.nav-link.active{background:#eaf2ff!important;color:var(--tw-blue)!important}
+.page-header{padding:64px 5%!important;background:radial-gradient(circle at 85% 10%,#2e67b5 0,transparent 28%),linear-gradient(135deg,#071b3d,#174982)!important;border-bottom:3px solid var(--tw-gold)}
+.page-header h1{font-size:42px!important}.page-header p{font-size:17px!important}
+.task-card,.pricing-card{border:1px solid #e0e8f4!important;border-radius:18px!important;box-shadow:0 15px 35px rgba(11,36,80,.10)!important}
+.card-header-custom{background:linear-gradient(135deg,#fff,#f5f9ff);border-bottom:1px solid #e5edf7!important;border-radius:18px 18px 0 0}
+.card-header-custom h2,.section-title{color:var(--tw-navy)}
+.section-title{border-left:4px solid var(--tw-gold);padding-left:10px;margin-bottom:16px}
+.form-control,.form-select{border-color:#ced9e7!important;border-radius:10px!important}
+.form-control:focus,.form-select:focus{border-color:#3971b9!important;box-shadow:0 0 0 3px rgba(57,113,185,.14)!important}
+.budget-box{background:linear-gradient(135deg,#edf5ff,#fffaf0)!important;border-color:#d9e5f5!important}
+.btn-post-task{background:linear-gradient(135deg,#dcb65a,#bd8c22)!important;color:#15243d!important;box-shadow:0 8px 18px rgba(158,113,20,.2)}
+.btn-post-task:hover{background:linear-gradient(135deg,#eccb78,#c38e1e)!important}
+.pricing-header{background:linear-gradient(135deg,#eff5ff,#fff)!important}.pricing-icon{background:#f8edc9!important;color:#a27418!important}
+.suggested-item{background:#f8fbff!important}.price-item h3{color:var(--tw-blue)!important}.final-note{color:#b17e16!important}
+.footer{background:#071b3d!important;border-top:3px solid var(--tw-gold);color:#dce7f7!important}
+@media(max-width:768px){.page-header{padding:45px 6%!important}.page-header h1{font-size:32px!important}.task-window-logo{width:40px!important;height:40px!important}.main-wrapper{margin:26px auto!important}}
