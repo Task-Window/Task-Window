@@ -94,12 +94,16 @@
     };
 
     try {
-      const { data: { user } } = await supabaseClient.auth.getUser();
-      if (!user) {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+
+      if (!session || !session.user) {
         message.className = "mt-3 alert alert-warning";
-        message.textContent = "Please log in before posting a task. Login will be added next.";
+        message.textContent = "You are not logged in. Please log in before posting a task.";
+        button.disabled = false;
         return;
       }
+
+      const user = session.user;
 
       const { error } = await supabaseClient.from("tasks").insert({ ...task, user_id: user.id });
       if (error) throw error;
