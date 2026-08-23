@@ -30,14 +30,24 @@ header{
     color:#2563eb;
     display:flex;
     align-items:center;
-    gap:10px;
+    gap:8px;
     text-decoration:none;
+    flex:0 0 auto;
+    white-space:nowrap;
 }
 
 .logo img{
-    width:48px;
-    height:48px;
+    width:40px;
+    height:40px;
+    flex:0 0 auto;
     object-fit:contain;
+}
+
+nav{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    flex-wrap:wrap;
 }
 
 nav a{
@@ -205,6 +215,7 @@ header{
 }
 
 nav{
+    display:block;
     margin-top:20px;
 }
 
