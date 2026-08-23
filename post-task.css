@@ -856,3 +856,14 @@ body{background:var(--tw-page);color:#1b2940}
 .help-chat-options{display:grid;gap:8px}.help-chat-options button{text-align:left;background:#f5f9ff;border:1px solid #d8e5f5;border-radius:9px;padding:10px 12px;color:#153f7a;font:600 13px "Poppins",sans-serif;cursor:pointer}.help-chat-options button:hover{background:#eaf2ff;border-color:#9ebce3}
 .help-chat-answer{margin:14px 0 0;padding:11px 12px;border-left:3px solid #d5a638;background:#fffbf0;color:#3e4f67;font-size:13px;line-height:1.55}
 @media(max-width:600px){.help-chat{right:16px;bottom:16px}.help-chat-toggle{padding:12px 16px}}
+
+
+/* Warm cream surface palette */
+body{background:#f8f4ea!important}
+.navbar{background:#fffdf7!important}
+.task-card,.pricing-card{background:#fffdf8!important}
+.card-header-custom{background:linear-gradient(135deg,#fffdf8,#faf4e5)!important}
+.pricing-header{background:linear-gradient(135deg,#faf4e5,#fffdf8)!important}
+.form-control,.form-select{background:#fffefb!important}
+.help-chat-panel{background:#fffdf8!important}
+.help-chat-options button{background:#fbf6e9!important}
