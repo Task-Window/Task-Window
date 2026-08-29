@@ -21,13 +21,32 @@ body{min-height:100vh;margin:0;display:flex;align-items:center;justify-content:c
       <h2>Log In</h2>
       <span>Use your Task-Window account and keep your tasks linked to your profile.</span>
     </a>
-    <a class="choice guest-choice" href="post-task.html">
+    <button class="choice guest-choice" id="guestButton" type="button">
       <i class="fa-solid fa-user-clock"></i>
       <h2>Continue as Guest</h2>
-      <span>Go directly to the Post Your Task page without creating an account.</span>
-    </a>
+      <span>Continue securely without creating an account.</span>
+    </button>
   </div>
+  <p id="guestMessage" style="margin-top:18px;margin-bottom:0" role="status"></p>
   <a class="back" href="index.html"><i class="fa-solid fa-arrow-left"></i> Back to Home</a>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+document.getElementById("guestButton").addEventListener("click", async () => {
+  const button = document.getElementById("guestButton");
+  const message = document.getElementById("guestMessage");
+  button.disabled = true;
+  message.textContent = "Starting guest session...";
+  const { error } = await supabaseClient.auth.signInAnonymously();
+  if (error) {
+    console.error(error);
+    message.textContent = "Unable to start guest mode. Please try again.";
+    button.disabled = false;
+    return;
+  }
+  window.location.href = "post-task.html";
+});
+</script>
 </body>
 </html>
