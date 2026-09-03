@@ -41,7 +41,6 @@
 <div class="customer-price-preview"><span>Your Price</span><strong id="customerPricePreview">₹0</strong></div>
 <div class="pricing-explanation"><h4>How pricing works</h4><p>Market Price reflects a typical range for the selected service.</p><p>Labour Price estimates the basic effort involved.</p><p class="final-note">You always decide the final price you want to offer.</p></div></aside>
 </main>
-
 <div class="help-chat" id="helpChat">
   <section class="help-chat-panel" aria-label="Client help">
     <div class="help-chat-header"><div><strong>Need help?</strong><span>Quick answers for posting a task</span></div><button class="help-chat-close" type="button" aria-label="Close help chat">×</button></div>
@@ -51,7 +50,6 @@
   </section><button class="help-chat-toggle" type="button" aria-expanded="false" aria-controls="helpChat"><span aria-hidden="true">💬</span><span>Help</span></button>
 </div>
 <footer class="footer">The Smart Way to Get Things Done</footer>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="pricing.js"></script>
@@ -90,7 +88,11 @@
       difficulty: document.getElementById("difficultySelect").value,
       estimated_time: document.getElementById("taskHours").value,
       budget: Number(document.getElementById("customerBudget").value),
-      status: "open"
+      status: "open",
+      customer_name: document.getElementById("customerName").value.trim(),
+      customer_email: document.getElementById("customerEmail").value.trim(),
+      customer_phone: document.getElementById("customerPhone").value.trim() || null,
+      deadline: document.getElementById("deadline").value
     };
 
     try {
@@ -103,19 +105,17 @@
         return;
       }
 
-      const user = session.user;
-
-      const { error } = await supabaseClient.from("tasks").insert({ ...task, user_id: user.id });
+      const { error } = await supabaseClient.from("tasks").insert({ ...task, user_id: session.user.id });
       if (error) throw error;
 
       message.className = "mt-3 alert alert-success";
-      message.textContent = "Your task has been posted successfully!";
+      message.textContent = "Your task has been posted successfully! A confirmation email will be sent shortly.";
       form.reset();
       if (typeof window.updatePricing === "function") window.updatePricing();
     } catch (error) {
-      console.error(error);
+      console.error("Task posting error:", error);
       message.className = "mt-3 alert alert-danger";
-      message.textContent = "Unable to post the task yet. Please check your login and try again.";
+      message.textContent = error?.message || error?.details || error?.hint || "Unable to post the task.";
     } finally {
       button.disabled = false;
     }
