@@ -105,11 +105,25 @@
         return;
       }
 
-      const { error } = await supabaseClient.from("tasks").insert({ ...task, user_id: session.user.id });
+      const { data: insertedTask, error } = await supabaseClient.from("tasks").insert({ ...task, user_id: session.user.id }).select("id").single();
       if (error) throw error;
 
-      message.className = "mt-3 alert alert-success";
-      message.textContent = "Your task has been posted successfully! A confirmation email will be sent shortly.";
+      // Send the task notification securely from the authenticated user's session.
+      // The Edge Function sends the admin notification to the official Task-Window email
+      // and sends the client confirmation to the email entered in the form.
+      const { error: notificationError } = await supabaseClient.functions.invoke("task-notification", {
+        body: { task_id: insertedTask.id }
+      });
+
+      if (notificationError) {
+        console.error("Task notification error:", notificationError);
+        message.className = "mt-3 alert alert-warning";
+        message.textContent = "Your task has been posted successfully. We could not send the email notification yet.";
+      } else {
+        message.className = "mt-3 alert alert-success";
+        message.textContent = "Your task has been posted successfully! A confirmation email has been sent, and Task-Window has been notified.";
+      }
+
       form.reset();
       if (typeof window.updatePricing === "function") window.updatePricing();
     } catch (error) {
