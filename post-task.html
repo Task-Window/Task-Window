@@ -75,6 +75,17 @@
   const message = document.getElementById("taskFormMessage");
   const button = document.getElementById("postTaskButton");
 
+  async function getNotificationErrorDetails(error) {
+    try {
+      if (error?.context && typeof error.context.json === "function") {
+        const body = await error.context.json();
+        if (body?.details) return Array.isArray(body.details) ? body.details.join("; ") : String(body.details);
+        if (body?.error) return String(body.error);
+      }
+    } catch (_) {}
+    return error?.message || error?.details || error?.hint || "Email notification failed.";
+  }
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     message.className = "mt-3 alert alert-info";
@@ -108,17 +119,15 @@
       const { data: insertedTask, error } = await supabaseClient.from("tasks").insert({ ...task, user_id: session.user.id }).select("id").single();
       if (error) throw error;
 
-      // Send the task notification securely from the authenticated user's session.
-      // The Edge Function sends the admin notification to the official Task-Window email
-      // and sends the client confirmation to the email entered in the form.
       const { error: notificationError } = await supabaseClient.functions.invoke("task-notification", {
         body: { task_id: insertedTask.id }
       });
 
       if (notificationError) {
         console.error("Task notification error:", notificationError);
+        const details = await getNotificationErrorDetails(notificationError);
         message.className = "mt-3 alert alert-warning";
-        message.textContent = "Your task has been posted successfully. We could not send the email notification yet.";
+        message.textContent = `Task posted, but email notification failed: ${details}`;
       } else {
         message.className = "mt-3 alert alert-success";
         message.textContent = "Your task has been posted successfully! A confirmation email has been sent, and Task-Window has been notified.";
