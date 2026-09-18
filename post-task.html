@@ -29,7 +29,7 @@
 <div class="form-group-custom"><label for="taskDescription">Describe Your Task</label><textarea id="taskDescription" name="task_description" class="form-control" rows="6" placeholder="Explain exactly what you want us to do..." required></textarea><small>Please provide as much detail as possible.</small></div>
 <div class="form-grid-2"><div class="form-group-custom"><label for="categorySelect">Category</label><select id="categorySelect" name="category" class="form-select" required><option value="">Select Category</option><option>Assignment Help</option><option>Research Assistant</option><option>PPT Design</option><option>Online Tutoring</option><option>Resume & CV Writing</option><option>Graphic Design</option><option>Logo Design</option><option>Video Editing</option><option>Translation</option><option>Data Entry</option><option>Web Development</option><option>App Development</option><option>Content Writing</option><option>AI & Automation</option></select></div><div class="form-group-custom"><label for="difficultySelect">Difficulty</label><select id="difficultySelect" name="difficulty" class="form-select"><option>Easy</option><option>Medium</option><option>Hard</option><option>Expert</option></select></div></div>
 <div class="form-grid-2"><div class="form-group-custom"><label for="taskHours">Estimated Time</label><select id="taskHours" name="estimated_time" class="form-select"><option>30 Minutes</option><option>1 Hour</option><option>2 Hours</option><option>4 Hours</option><option>8 Hours</option><option>12+ Hours</option></select></div><div class="form-group-custom"><label for="deadline">Deadline</label><input type="date" id="deadline" name="deadline" class="form-control" required></div></div>
-<div class="form-group-custom"><label for="taskFile">Attach File <span class="optional">(Optional)</span></label><input type="file" id="taskFile" name="attachment" class="form-control"><small>PDF, Word, PowerPoint, Excel, images or other relevant files.</small></div>
+<div class="form-group-custom"><label for="taskFile">Attach File <span class="optional">(Optional)</span></label><input type="file" id="taskFile" name="attachment" class="form-control"><small>PDF, Word, PowerPoint, Excel, images or other relevant files. Maximum 10 MB.</small></div>
 <div class="budget-box"><div class="budget-title"><i class="fa-solid fa-wallet"></i><div><h3>Your Price</h3><p>You decide how much you want to pay.</p></div></div><div class="budget-input-wrapper"><span>₹</span><input type="number" id="customerBudget" name="customer_budget" placeholder="Enter your price" min="1" required></div><p class="budget-note">Compare your price with the Smart Pricing suggestion before submitting.</p></div>
 <div id="taskFormMessage" class="mt-3" role="status" aria-live="polite"></div>
 <div class="post-button-wrapper"><button type="submit" class="btn-post-task" id="postTaskButton"><i class="fa-solid fa-paper-plane"></i> Post Task</button></div>
@@ -86,11 +86,23 @@
     return error?.message || error?.details || error?.hint || "Email notification failed.";
   }
 
+  function safeFileName(name) {
+    return name.replace(/[^a-zA-Z0-9._-]/g, "_").replace(/_+/g, "_").slice(-180);
+  }
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     message.className = "mt-3 alert alert-info";
     message.textContent = "Posting your task...";
     button.disabled = true;
+
+    const selectedFile = document.getElementById("taskFile").files[0] || null;
+    if (selectedFile && selectedFile.size > 10 * 1024 * 1024) {
+      message.className = "mt-3 alert alert-danger";
+      message.textContent = "The selected file is larger than 10 MB. Please choose a smaller file.";
+      button.disabled = false;
+      return;
+    }
 
     const task = {
       title: document.getElementById("taskTitle").value.trim(),
@@ -106,6 +118,9 @@
       deadline: document.getElementById("deadline").value
     };
 
+    let insertedTask = null;
+    let uploadedPath = null;
+
     try {
       const { data: { session } } = await supabaseClient.auth.getSession();
 
@@ -116,8 +131,27 @@
         return;
       }
 
-      const { data: insertedTask, error } = await supabaseClient.from("tasks").insert({ ...task, user_id: session.user.id }).select("id").single();
+      const { data, error } = await supabaseClient.from("tasks").insert({ ...task, user_id: session.user.id }).select("id").single();
       if (error) throw error;
+      insertedTask = data;
+
+      if (selectedFile) {
+        message.textContent = "Uploading your document...";
+        const filePath = `${session.user.id}/${insertedTask.id}/${Date.now()}_${safeFileName(selectedFile.name)}`;
+        const { error: uploadError } = await supabaseClient.storage.from("task-attachments").upload(filePath, selectedFile, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: selectedFile.type || "application/octet-stream"
+        });
+        if (uploadError) throw new Error(`Document upload failed: ${uploadError.message}`);
+        uploadedPath = filePath;
+
+        const { error: updateError } = await supabaseClient.from("tasks").update({
+          attachment_name: selectedFile.name,
+          attachment_path: filePath
+        }).eq("id", insertedTask.id).eq("user_id", session.user.id);
+        if (updateError) throw new Error(`Task attachment record failed: ${updateError.message}`);
+      }
 
       const { error: notificationError } = await supabaseClient.functions.invoke("task-notification", {
         body: { task_id: insertedTask.id }
@@ -130,13 +164,21 @@
         message.textContent = `Task posted, but email notification failed: ${details}`;
       } else {
         message.className = "mt-3 alert alert-success";
-        message.textContent = "Your task has been posted successfully! A confirmation email has been sent, and Task-Window has been notified.";
+        message.textContent = selectedFile
+          ? "Your task and document have been uploaded successfully! A confirmation email has been sent, and Task-Window has been notified."
+          : "Your task has been posted successfully! A confirmation email has been sent, and Task-Window has been notified.";
       }
 
       form.reset();
       if (typeof window.updatePricing === "function") window.updatePricing();
     } catch (error) {
       console.error("Task posting error:", error);
+      if (uploadedPath) {
+        await supabaseClient.storage.from("task-attachments").remove([uploadedPath]);
+      }
+      if (insertedTask?.id) {
+        await supabaseClient.from("tasks").delete().eq("id", insertedTask.id);
+      }
       message.className = "mt-3 alert alert-danger";
       message.textContent = error?.message || error?.details || error?.hint || "Unable to post the task.";
     } finally {
