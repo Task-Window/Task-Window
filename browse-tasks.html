@@ -1,32 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Task-Window | Browse Tasks</title>
 <link rel="stylesheet" href="style.css">
 <style>
-.browse{padding:70px 6%;max-width:1400px;margin:auto}.browse h1{text-align:center;font-size:44px;margin-bottom:12px}.browse-intro{text-align:center;color:#64748b;margin-bottom:40px}.filters{display:flex;gap:15px;flex-wrap:wrap;justify-content:center;margin-bottom:35px}.filters input,.filters select{padding:13px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:16px;min-width:220px}.task-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}.task-card-browse{background:white;border:1px solid #e5e7eb;border-radius:15px;padding:25px;box-shadow:0 5px 15px rgba(0,0,0,.06)}.task-card-browse h3{margin-bottom:12px;color:#1d4ed8}.task-card-browse p{line-height:1.6;color:#475569}.task-meta{display:flex;justify-content:space-between;margin:18px 0;font-size:14px;color:#64748b}.price{font-size:20px;font-weight:700;color:#111827}.empty{text-align:center;padding:50px;color:#64748b}
+.browse{padding:70px 6%;max-width:1400px;margin:auto}.browse h1{text-align:center;font-size:44px;margin-bottom:12px}.browse-intro{text-align:center;color:#64748b;margin-bottom:40px}.filters{display:flex;gap:15px;flex-wrap:wrap;justify-content:center;margin-bottom:35px}.filters input,.filters select{padding:13px 16px;border:1px solid #d1d5db;border-radius:8px;font-size:16px;min-width:220px}.task-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}.task-card-browse{background:white;border:1px solid #e5e7eb;border-radius:15px;padding:25px;box-shadow:0 5px 15px rgba(0,0,0,.06)}.task-card-browse h3{margin-bottom:12px;color:#1d4ed8}.task-card-browse p{line-height:1.6;color:#475569}.task-meta{display:flex;justify-content:space-between;gap:15px;margin:18px 0;font-size:14px;color:#64748b}.price{font-size:20px;font-weight:700;color:#111827}.attachment{margin:16px 0;padding:12px;background:#f8fafc;border-radius:10px}.attachment a{font-weight:600}.empty{text-align:center;padding:50px;color:#64748b}.browse-message{text-align:center;margin:0 auto 25px;color:#64748b}
 </style>
 </head>
 <body>
 <header><a class="logo" href="index.html"><img src="assets/task-window-logo.png" alt="Task-Window logo"><span class="logo-tagline"><em>From ideas</em><strong>to completion</strong></span></a><nav><a href="index.html">Home</a><a href="browse-tasks.html">Browse Tasks</a><a href="post-task.html">Post a Task</a><a href="index.html#how-it-works">How It Works</a></nav></header>
 <main class="browse">
 <h1>Browse Tasks</h1><p class="browse-intro">Find tasks that match your skills and budget.</p>
+<div id="browseMessage" class="browse-message"></div>
 <div class="filters"><input id="search" type="search" placeholder="Search tasks..."><select id="category"><option value="">All Categories</option><option>Data Entry</option><option>Graphic Design</option><option>Web Development</option><option>App Development</option><option>Video Editing</option><option>Content Writing</option><option>Research Assistant</option><option>Online Tutoring</option><option>Assignment Help</option><option>PPT Design</option><option>Translation</option><option>AI & Automation</option></select></div>
 <div id="taskGrid" class="task-grid"></div>
 </main>
 <footer><p>The Smart Way to Get Things Done</p><p>© 2026. All Rights Reserved.</p></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 <script>
-const tasks=[
-{title:'Create a 20-slide biology presentation',category:'PPT Design',description:'Need a clean and professional presentation with diagrams and references.',price:'₹1,500',time:'2 days'},
-{title:'Excel data entry and formatting',category:'Data Entry',description:'Enter and organize data in an Excel spreadsheet and apply basic formatting.',price:'₹800',time:'1 day'},
-{title:'Research literature summary',category:'Research Assistant',description:'Prepare a concise literature summary from selected research papers.',price:'₹2,000',time:'3 days'},
-{title:'Design a simple business logo',category:'Graphic Design',description:'Create a modern logo with editable source files.',price:'₹1,000',time:'2 days'},
-{title:'Proofread an academic document',category:'Content Writing',description:'Proofread grammar, clarity and formatting of an academic document.',price:'₹1,200',time:'2 days'}
-];
-const grid=document.getElementById('taskGrid');const search=document.getElementById('search');const category=document.getElementById('category');
-const params=new URLSearchParams(location.search); if(params.get('category')) category.value=params.get('category');
-function render(){const q=search.value.toLowerCase();const c=category.value;const list=tasks.filter(t=>(!q||t.title.toLowerCase().includes(q)||t.description.toLowerCase().includes(q))&&(!c||t.category===c));grid.innerHTML=list.length?list.map(t=>`<article class="task-card-browse"><h3>${t.title}</h3><p>${t.description}</p><div class="task-meta"><span>${t.category}</span><span>${t.time}</span></div><div class="task-meta"><span class="price">${t.price}</span><a class="secondary" href="post-task.html">Apply</a></div></article>`).join(''):'<div class="empty">No tasks found. Try another search or category.</div>';}search.addEventListener('input',render);category.addEventListener('change',render);render();
+const grid=document.getElementById('taskGrid');
+const search=document.getElementById('search');
+const category=document.getElementById('category');
+const browseMessage=document.getElementById('browseMessage');
+const params=new URLSearchParams(location.search);
+if(params.get('category')) category.value=params.get('category');
+let tasks=[];
+const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
+
+async function attachmentLink(task){
+  if(!task.attachment_path) return '';
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(!session) return '<div class="attachment">📎 <strong>'+escapeHtml(task.attachment_name||'Attachment')+'</strong><br><small>Please log in to view/download this document.</small></div>';
+  const {data,error}=await supabaseClient.storage.from('task-attachments').createSignedUrl(task.attachment_path,3600);
+  if(error||!data?.signedUrl) return '<div class="attachment">📎 <strong>'+escapeHtml(task.attachment_name||'Attachment')+'</strong><br><small>Attachment is temporarily unavailable.</small></div>';
+  return '<div class="attachment">📎 <strong>'+escapeHtml(task.attachment_name||'Attachment')+'</strong><br><a href="'+data.signedUrl+'" target="_blank" rel="noopener">View / Download</a></div>';
+}
+
+async function render(){
+  const q=search.value.toLowerCase().trim();
+  const c=category.value;
+  const list=tasks.filter(t=>(!q||t.title.toLowerCase().includes(q)||String(t.description||'').toLowerCase().includes(q))&&(!c||t.category===c));
+  if(!list.length){grid.innerHTML='<div class="empty">No tasks found. Try another search or category.</div>';return;}
+  grid.innerHTML='';
+  for(const t of list){
+    const article=document.createElement('article');
+    article.className='task-card-browse';
+    article.innerHTML='<h3>'+escapeHtml(t.title)+'</h3><p>'+escapeHtml(t.description||'')+'</p><div class="task-meta"><span>'+escapeHtml(t.category||'')+'</span><span>'+escapeHtml(t.deadline||'')+'</span></div><div class="task-meta"><span class="price">₹'+escapeHtml(t.budget??'')+'</span><span>'+escapeHtml(t.estimated_time||'')+'</span></div>';
+    const attachment=document.createElement('div');
+    attachment.innerHTML=await attachmentLink(t);
+    article.appendChild(attachment.firstElementChild || attachment);
+    const apply=document.createElement('div');
+    apply.innerHTML='<a class="secondary" href="post-task.html">Apply</a>';
+    article.appendChild(apply);
+    grid.appendChild(article);
+  }
+}
+
+async function loadTasks(){
+  browseMessage.textContent='Loading current tasks...';
+  const {data,error}=await supabaseClient.from('tasks').select('id,title,category,description,budget,estimated_time,deadline,attachment_path,attachment_name').eq('status','open').order('created_at',{ascending:false});
+  if(error){console.error(error);browseMessage.textContent='Unable to load tasks right now.';grid.innerHTML='<div class="empty">Please try again later.</div>';return;}
+  tasks=data||[];
+  browseMessage.textContent=tasks.length?'Current open tasks':'No open tasks yet.';
+  await render();
+}
+search.addEventListener('input',render);
+category.addEventListener('change',render);
+loadTasks();
 </script>
 </body></html>
