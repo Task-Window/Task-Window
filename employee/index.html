@@ -11,16 +11,47 @@
 <section id="app" class="hidden"><header class="topbar"><div class="brand">Task-<span>Window</span><span class="employee-badge">EMPLOYEE</span></div><button id="logout" class="btn logout">Log out</button></header><main class="wrap"><div class="hero"><h1>Employee Dashboard</h1><div class="muted">Manage customer requests and uploaded documents.</div></div><div class="stats"><div class="stat"><div class="muted">All tasks</div><strong id="allCount">0</strong></div><div class="stat"><div class="muted">Open</div><strong id="openCount">0</strong></div><div class="stat"><div class="muted">In progress</div><strong id="progressCount">0</strong></div><div class="stat"><div class="muted">Completed</div><strong id="completedCount">0</strong></div></div><div id="message" class="message">Loading customer tasks...</div><div class="toolbar"><input id="search" placeholder="Search task, customer or category..."><select id="statusFilter"><option value="all">All statuses</option><option value="open">Open</option><option value="in_progress">In progress</option><option value="completed">Completed</option></select><select id="sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></div><section id="tasks" class="tasks"></section></main></section>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../supabase-config.js"></script><script>
 const loginPage=document.getElementById('loginPage'),resetPage=document.getElementById('resetPage'),app=document.getElementById('app'),tasksEl=document.getElementById('tasks'),message=document.getElementById('message'),loginMessage=document.getElementById('loginMessage'),resetMessage=document.getElementById('resetMessage');let allTasks=[];
-function esc(v){return String(v??'').replace(/[&<>\'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]))}
+function esc(v){return String(v??'').replace(/[&<>\\'\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','\"':'&quot;'}[c]))}
 function updateStats(){allCount.textContent=allTasks.length;openCount.textContent=allTasks.filter(t=>t.status==='open').length;progressCount.textContent=allTasks.filter(t=>t.status==='in_progress').length;completedCount.textContent=allTasks.filter(t=>t.status==='completed').length}
 async function getRole(user){const {data,error}=await supabaseClient.from('profiles').select('role').eq('id',user.id).maybeSingle();if(error){console.error(error);return null}return data?.role||null}
-async function enter(session){const role=await getRole(session.user);if(role!=='employee'&&role!=='admin'){loginMessage.textContent='This account is not authorized for the employee portal.';await supabaseClient.auth.signOut();return}loginPage.classList.add('hidden');resetPage.classList.add('hidden');app.classList.remove('hidden');await loadTasks()}
+async function enter(session){if(!session?.user){loginMessage.textContent='Authentication session is missing. Please sign in again.';return}const role=await getRole(session.user);if(role!=='employee'&&role!=='admin'){loginMessage.textContent='This account is not authorized for the employee portal.';await supabaseClient.auth.signOut();return}loginPage.classList.add('hidden');resetPage.classList.add('hidden');app.classList.remove('hidden');await loadTasks()}
 function showReset(){loginPage.classList.add('hidden');app.classList.add('hidden');resetPage.classList.remove('hidden');resetMessage.textContent=''}
-async function start(){const {data:{session}}=await supabaseClient.auth.getSession();const recovery=window.location.hash.includes('type=recovery')||new URLSearchParams(window.location.search).get('type')==='recovery';if(recovery&&session){showReset();return}if(session)await enter(session)}
-supabaseClient.auth.onAuthStateChange(async(event,session)=>{if(event==='PASSWORD_RECOVERY'){showReset()}});
+function isRecoveryUrl(){return window.location.hash.includes('type=recovery')||new URLSearchParams(window.location.search).get('type')==='recovery'||new URLSearchParams(window.location.search).has('code')}
+async function restoreRecoverySession(){
+  let result=await supabaseClient.auth.getSession();
+  if(result.data?.session)return result.data.session;
+  const hash=new URLSearchParams(window.location.hash.replace(/^#/,'').replace(/^\\?/,'') );
+  const access_token=hash.get('access_token');
+  const refresh_token=hash.get('refresh_token');
+  if(access_token&&refresh_token){
+    const set=await supabaseClient.auth.setSession({access_token,refresh_token});
+    if(set.error)throw set.error;
+    return set.data.session;
+  }
+  const code=new URLSearchParams(window.location.search).get('code');
+  if(code){
+    const exchanged=await supabaseClient.auth.exchangeCodeForSession(code);
+    if(exchanged.error)throw exchanged.error;
+    return exchanged.data.session;
+  }
+  return null;
+}
+async function start(){
+  if(isRecoveryUrl()){
+    try{
+      const session=await restoreRecoverySession();
+      if(session){showReset();return}
+      resetPage.classList.remove('hidden');loginPage.classList.add('hidden');app.classList.add('hidden');resetMessage.textContent='The password-reset link is invalid or has expired. Please request a new link.';
+    }catch(error){console.error(error);resetPage.classList.remove('hidden');loginPage.classList.add('hidden');app.classList.add('hidden');resetMessage.textContent='Unable to establish the password-reset session. Please request a new reset link.'}
+    return;
+  }
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(session)await enter(session);
+}
+supabaseClient.auth.onAuthStateChange(async(event,session)=>{if(event==='PASSWORD_RECOVERY'&&session)showReset()});
 loginForm.onsubmit=async e=>{e.preventDefault();loginMessage.className='error';loginMessage.textContent='Signing in...';const {data,error}=await supabaseClient.auth.signInWithPassword({email:email.value.trim(),password:password.value});if(error){loginMessage.textContent=error.message;return}await enter(data.session)};
 forgotPassword.onclick=async e=>{e.preventDefault();const address=email.value.trim();if(!address){loginMessage.textContent='Enter your email address first.';return}loginMessage.className='error';loginMessage.textContent='Sending reset email...';const {error}=await supabaseClient.auth.resetPasswordForEmail(address,{redirectTo:window.location.origin+'/employee/'});if(error){loginMessage.textContent=error.message;return}loginMessage.className='error success';loginMessage.textContent='Password reset email sent. Check your Gmail.'};
-resetForm.onsubmit=async e=>{e.preventDefault();resetMessage.className='error';const p=newPassword.value,c=confirmPassword.value;if(p.length<8){resetMessage.textContent='Password must be at least 8 characters.';return}if(p!==c){resetMessage.textContent='Passwords do not match.';return}resetMessage.textContent='Updating password...';const {error}=await supabaseClient.auth.updateUser({password:p});if(error){resetMessage.textContent=error.message;return}resetMessage.className='error success';resetMessage.textContent='Password updated successfully. Redirecting...';setTimeout(async()=>{await supabaseClient.auth.signOut();window.location.href=window.location.origin+'/employee/'},1000)};
+resetForm.onsubmit=async e=>{e.preventDefault();resetMessage.className='error';const p=newPassword.value,c=confirmPassword.value;if(p.length<8){resetMessage.textContent='Password must be at least 8 characters.';return}if(p!==c){resetMessage.textContent='Passwords do not match.';return}const current=await supabaseClient.auth.getSession();if(!current.data?.session){resetMessage.textContent='Password-reset session is missing. Please use the newest reset email.';return}resetMessage.textContent='Updating password...';const {error}=await supabaseClient.auth.updateUser({password:p});if(error){resetMessage.textContent=error.message;return}resetMessage.className='error success';resetMessage.textContent='Password updated successfully. Redirecting...';setTimeout(async()=>{await supabaseClient.auth.signOut();window.location.href=window.location.origin+'/employee/'},1000)};
 logout.onclick=async()=>{await supabaseClient.auth.signOut();location.reload()};search.oninput=render;statusFilter.onchange=render;sort.onchange=render;
 async function loadTasks(){const {data,error}=await supabaseClient.from('tasks').select('*').order('created_at',{ascending:false});if(error){message.textContent='Unable to load tasks: '+error.message;return}allTasks=data||[];updateStats();render()}
 async function render(){const q=search.value.trim().toLowerCase(),filter=statusFilter.value;let rows=allTasks.filter(t=>(filter==='all'||t.status===filter)&&(!q||[t.title,t.category,t.description,t.customer_name,t.customer_email].some(v=>String(v||'').toLowerCase().includes(q))));rows.sort((a,b)=>sort.value==='newest'?new Date(b.created_at)-new Date(a.created_at):new Date(a.created_at)-new Date(b.created_at));message.textContent=rows.length?rows.length+' task'+(rows.length===1?'':'s')+' shown':'No matching customer tasks.';tasksEl.innerHTML='';for(const t of rows){let attachment='';if(t.attachment_path){const r=await supabaseClient.storage.from('task-attachments').createSignedUrl(t.attachment_path,3600);if(r.data?.signedUrl)attachment='<div class="attachment">📎 <strong>'+esc(t.attachment_name||'Document')+'</strong><br><a href="'+r.data.signedUrl+'" target="_blank" rel="noopener">View / Download document ↗</a></div>'}const label=t.status==='in_progress'?'In progress':t.status==='completed'?'Completed':'Open';const c=document.createElement('article');c.className='card';c.innerHTML='<h2>'+esc(t.title||'Untitled task')+'</h2><div class="customer">Customer: <strong>'+esc(t.customer_name||'Not provided')+'</strong> · '+esc(t.customer_email||'No email')+'</div><div class="meta"><span class="pill">'+esc(t.category||'Uncategorized')+'</span><span class="pill status">'+label+'</span></div><p>'+esc(t.description||'No description provided.')+'</p>'+attachment+'<div class="actions"><button class="btn primary" data-id="'+esc(t.id)+'" data-status="in_progress">Start task</button><button class="btn success-btn" data-id="'+esc(t.id)+'" data-status="completed">Mark completed</button></div>';tasksEl.appendChild(c)}tasksEl.querySelectorAll('button[data-id]').forEach(b=>b.onclick=()=>updateStatus(b.dataset.id,b.dataset.status))}
