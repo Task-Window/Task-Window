@@ -24,11 +24,11 @@ header{
 .logo-tagline{display:flex;flex-direction:column;gap:1px;padding-left:14px;border-left:1px solid rgba(213,166,56,.7);letter-spacing:.1px;white-space:nowrap}
 .logo-tagline em{font-family:Georgia,serif;font-size:16px;line-height:1.05;color:#5f6d80;font-weight:500}
 .logo-tagline strong{font-size:17px;line-height:1.1;letter-spacing:.35px;color:#a87819;text-transform:uppercase}
-
-
 nav{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:4px}
 nav a{color:#34445d;text-decoration:none;padding:9px 12px;border-radius:9px;font-size:15px;font-weight:700;transition:.2s ease}
 nav a:hover{background:var(--blue-light);color:var(--blue)}
+nav .employee-nav{background:var(--blue);color:#fff}
+nav .employee-nav:hover{background:#0b2450;color:#fff}
 .hero{
   min-height:500px;display:flex;flex-direction:column;justify-content:center;text-align:center;
   padding:105px 24px 115px;color:white;position:relative;overflow:hidden;
@@ -43,6 +43,13 @@ nav a:hover{background:var(--blue-light);color:var(--blue)}
 .primary{background:linear-gradient(135deg,#e3bd62,#c89424);color:#17233d;box-shadow:0 8px 22px rgba(0,0,0,.22)}
 .secondary{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.52);color:#fff}
 .primary:hover,.secondary:hover{transform:translateY(-3px);box-shadow:0 13px 24px rgba(0,0,0,.24)}
+.employee-cta{font-size:16px}
+.employee-section{max-width:1150px;margin:55px auto;padding:34px 38px;display:flex;align-items:center;justify-content:space-between;gap:28px;background:#fff;border:1px solid #dfe6f1;border-left:5px solid var(--gold);border-radius:18px;box-shadow:var(--shadow)}
+.employee-label{display:inline-block;margin-bottom:6px;font-size:12px;font-weight:800;letter-spacing:1.2px;color:#a87819}
+.employee-section h2{font-size:32px;color:var(--navy);margin-bottom:6px}
+.employee-section p{color:var(--muted);max-width:690px;font-size:16px}
+.employee-login{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;min-height:50px;padding:0 22px;border-radius:10px;background:var(--blue);color:#fff;text-decoration:none;font-weight:800;box-shadow:0 7px 18px rgba(21,63,122,.22)}
+.employee-login:hover{background:var(--navy);transform:translateY(-2px)}
 .services,.steps{padding:90px clamp(22px,7vw,110px)}
 .services{background:var(--surface)}
 .services h2,.steps h2{text-align:center;font-size:clamp(30px,4vw,44px);line-height:1.15;color:var(--navy);margin-bottom:44px;letter-spacing:-1.4px}
@@ -55,8 +62,5 @@ nav a:hover{background:var(--blue-light);color:var(--blue)}
 .step h3{color:var(--navy);font-size:21px;margin-bottom:12px}.step p{color:var(--muted);font-size:16px}
 footer{background:#071b3d;color:#dce7f7;text-align:center;padding:47px 20px;border-top:3px solid var(--gold)}
 footer h3{font-size:26px;color:#fff;margin-bottom:6px}footer p{margin:6px 0}
-@media(max-width:830px){header{padding:12px 22px;align-items:flex-start;flex-direction:column;gap:7px}nav{justify-content:flex-start;width:100%}.logo img{width:78px;height:78px}.logo-tagline{display:flex;flex-direction:column;gap:1px;padding-left:14px;border-left:1px solid rgba(213,166,56,.7);letter-spacing:.1px;white-space:nowrap}
-.logo-tagline em{font-family:Georgia,serif;font-size:16px;line-height:1.05;color:#5f6d80;font-weight:500}
-.logo-tagline strong{font-size:17px;line-height:1.1;letter-spacing:.35px;color:#a87819;text-transform:uppercase}
-.logo{font-size:22px}.hero{min-height:440px;padding:82px 20px}.services,.steps{padding:64px 22px}.step-box{grid-template-columns:1fr}}
-@media(max-width:480px){nav{display:grid;grid-template-columns:repeat(2,1fr);gap:3px}nav a{padding:8px 9px;font-size:14px;text-align:center}.hero h1{letter-spacing:-1.5px}.primary,.secondary{width:100%}.card{min-height:100px;font-size:16px}}
+@media(max-width:830px){header{padding:12px 22px;align-items:flex-start;flex-direction:column;gap:7px}nav{justify-content:flex-start;width:100%}.logo img{width:78px;height:78px}.logo-tagline{display:flex;flex-direction:column;gap:1px;padding-left:14px;border-left:1px solid rgba(213,166,56,.7);letter-spacing:.1px;white-space:nowrap}.logo-tagline em{font-family:Georgia,serif;font-size:16px;line-height:1.05;color:#5f6d80;font-weight:500}.logo-tagline strong{font-size:17px;line-height:1.1;letter-spacing:.35px;color:#a87819;text-transform:uppercase}.logo{font-size:22px}.hero{min-height:440px;padding:82px 20px}.services,.steps{padding:64px 22px}.step-box{grid-template-columns:1fr}.employee-section{margin:35px 22px;padding:28px 24px;align-items:flex-start;flex-direction:column}.employee-login{width:100%}}
+@media(max-width:480px){nav{display:grid;grid-template-columns:repeat(2,1fr);gap:3px}nav a{padding:8px 9px;font-size:14px;text-align:center}.hero h1{letter-spacing:-1.5px}.primary,.secondary{width:100%}.card{min-height:100px;font-size:16px}.employee-section h2{font-size:27px}}
