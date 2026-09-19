@@ -13,3 +13,14 @@ const supabaseClient = window.supabase.createClient(
     }
   }
 );
+
+// Keep the Employee Portal synchronized when Admin assigns or updates tasks.
+// The employee page reloads only when a task row changes; no task data is exposed here.
+if (window.location.pathname.includes('/employee/')) {
+  supabaseClient
+    .channel('employee-task-updates')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, () => {
+      window.location.reload();
+    })
+    .subscribe();
+}
