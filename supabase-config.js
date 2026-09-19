@@ -24,3 +24,19 @@ if (window.location.pathname.includes('/employee/')) {
     })
     .subscribe();
 }
+
+// The Admin page must never remain signed in as an employee/customer.
+// If an existing non-admin session opens /admin/, clear that session and reload
+// so the user gets the Admin sign-in form instead of the "Admin access required" page.
+if (window.location.pathname.includes('/admin/')) {
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (!session) return;
+    setTimeout(async () => {
+      const { data: role } = await supabaseClient.rpc('get_my_role');
+      if (role !== 'admin') {
+        await supabaseClient.auth.signOut();
+        window.location.reload();
+      }
+    }, 0);
+  });
+}
