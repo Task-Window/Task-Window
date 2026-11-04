@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Create a personalised digital wedding invitation video with Task-Window.">
+<title>Task-Window | Invitation Video Maker</title>
+<link rel="stylesheet" href="style.css">
+<style>
+:root{--iv-navy:#0b2450;--iv-gold:#d5a638;--iv-cream:#fffdf7}
+.iv-wrap{max-width:1240px;margin:auto;padding:52px 22px 76px}
+.iv-heading{text-align:center;margin-bottom:34px}.iv-kicker{font-size:12px;font-weight:800;letter-spacing:2px;color:#a87819;text-transform:uppercase}.iv-heading h1{font-size:clamp(32px,4vw,48px);color:var(--iv-navy);margin:8px 0}.iv-heading p{color:#65738a;max-width:690px;margin:auto}
+.iv-layout{display:grid;grid-template-columns:minmax(300px,.92fr) minmax(340px,1.08fr);gap:26px;align-items:start}
+.iv-panel,.iv-preview-panel{background:#fff;border:1px solid #e5eaf2;border-radius:18px;padding:24px;box-shadow:0 12px 32px rgba(14,42,88,.08)}
+.iv-panel h2,.iv-preview-panel h2{font-size:21px;color:var(--iv-navy);margin:0 0 18px}
+.iv-field{display:flex;flex-direction:column;gap:6px;margin:0 0 14px}.iv-field label{font-size:13px;font-weight:750;color:#34445d}.iv-field input,.iv-field textarea,.iv-field select{width:100%;border:1px solid #d7deea;border-radius:9px;padding:11px 12px;font:inherit;background:#fff;color:#162033}.iv-field textarea{min-height:76px;resize:vertical}
+.iv-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.iv-templates{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:20px}
+.iv-template{border:2px solid #e5eaf2;background:#fff;border-radius:12px;padding:8px;cursor:pointer;text-align:center;color:#34445d;font-weight:750;font-size:12px}.iv-template[aria-pressed=true]{border-color:var(--iv-gold);background:#fffaf0}
+.iv-swatch{height:65px;border-radius:7px;margin-bottom:7px;display:grid;place-items:center;font:23px Georgia,serif}
+.iv-swatch.royal{background:linear-gradient(135deg,#4c1024,#8a2943);color:#f9df9b}.iv-swatch.blush{background:linear-gradient(135deg,#f7dbe0,#fff1e8);color:#9d5968}.iv-swatch.ivory{background:linear-gradient(135deg,#fff8df,#e9d4a0);color:#795b25}
+.iv-canvas{position:relative;aspect-ratio:9/16;width:min(100%,340px);margin:0 auto 18px;border-radius:15px;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;color:#fae8b7;background:radial-gradient(circle at 50% 35%,#8c354e,#3b1027 75%);box-shadow:0 12px 28px rgba(18,28,48,.2);isolation:isolate}
+.iv-canvas[data-theme=blush]{background:radial-gradient(circle at 50% 35%,#fff0e8,#edc3c9 78%);color:#78424c}
+.iv-canvas[data-theme=ivory]{background:radial-gradient(circle at 50% 35%,#fff9e8,#cfb578 85%);color:#624817}
+.iv-canvas:before{content:"";position:absolute;inset:12px;border:1px solid currentColor;opacity:.75;pointer-events:none}
+.iv-canvas:after{content:"✦  ❀  ✦";position:absolute;top:23px;left:0;right:0;font-size:20px;letter-spacing:9px;opacity:.9}
+.iv-canvas .iv-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.17;z-index:-1}
+.iv-canvas-content{position:relative;z-index:1;width:100%;text-shadow:0 2px 8px rgba(0,0,0,.2)}
+.iv-canvas[data-theme=blush] .iv-canvas-content,.iv-canvas[data-theme=ivory] .iv-canvas-content{text-shadow:none}
+.iv-ganesh{font-size:34px;margin-bottom:10px}.iv-invite{font:italic 14px Georgia,serif;letter-spacing:2px;text-transform:uppercase}.iv-names{font:clamp(29px,6vw,39px) Georgia,serif;line-height:1.08;margin:14px 0}.iv-and{font:italic 18px Georgia,serif;margin:2px}.iv-rule{height:1px;width:56%;background:currentColor;opacity:.7;margin:15px auto}.iv-date{font:16px Georgia,serif;letter-spacing:1px}.iv-detail{font:12px/1.65 Georgia,serif;margin-top:13px;white-space:pre-line}
+.iv-actions{display:flex;gap:10px;flex-wrap:wrap}.iv-btn{border:0;border-radius:9px;padding:12px 16px;font-weight:800;cursor:pointer}.iv-btn.primary{background:linear-gradient(135deg,#e3bd62,#c89424);color:#17233d}.iv-btn.secondary{background:#edf2fa;color:#17365f}.iv-btn:disabled{opacity:.55;cursor:not-allowed}
+.iv-note{font-size:12px;color:#718096;line-height:1.5;margin-top:12px}.iv-status{font-size:13px;color:#315b3c;margin-top:12px;min-height:20px}.iv-file{font-size:13px}
+.iv-topnav{background:#fffdf7}
+@media(max-width:850px){.iv-layout{grid-template-columns:1fr}.iv-preview-panel{order:-1}}
+@media(max-width:480px){.iv-panel,.iv-preview-panel{padding:17px}.iv-two{grid-template-columns:1fr}.iv-wrap{padding:34px 14px 55px}}
+</style>
+</head>
+<body>
+<header class="iv-topnav">
+<a class="logo" href="index.html"><img src="assets/task-window-logo.png" alt="Task-Window logo"><span class="logo-tagline"><em>From ideas</em><strong>to completion</strong></span></a>
+<nav aria-label="Main navigation"><a href="index.html">Home</a><a href="how-it-works.html">How It Works</a><a href="browse-tasks.html">Browse Tasks</a><a href="login.html">Login</a></nav>
+</header>
+<main class="iv-wrap">
+<section class="iv-heading"><span class="iv-kicker">A new creative service by Task-Window</span><h1>Invitation Video Maker</h1><p>Create a beautiful digital invitation for your special celebration. Personalise the names, date, venue and photo, preview it, then export a short invitation video.</p></section>
+<div class="iv-layout">
+<section class="iv-panel">
+<h2>1. Choose your design</h2>
+<div class="iv-templates" role="group" aria-label="Invitation themes">
+<button class="iv-template" type="button" data-theme="royal" aria-pressed="true"><span class="iv-swatch royal">❀</span>Royal Maroon</button>
+<button class="iv-template" type="button" data-theme="blush" aria-pressed="false"><span class="iv-swatch blush">✿</span>Blush Floral</button>
+<button class="iv-template" type="button" data-theme="ivory" aria-pressed="false"><span class="iv-swatch ivory">✧</span>Ivory Gold</button>
+</div>
+<h2>2. Add your details</h2>
+<div class="iv-two">
+<div class="iv-field"><label for="bride">Bride's name</label><input id="bride" maxlength="35" value="Aarohi"></div>
+<div class="iv-field"><label for="groom">Groom's name</label><input id="groom" maxlength="35" value="Arjun"></div>
+</div>
+<div class="iv-two">
+<div class="iv-field"><label for="weddingDate">Wedding date</label><input id="weddingDate" type="date"></div>
+<div class="iv-field"><label for="weddingTime">Time</label><input id="weddingTime" type="text" maxlength="35" placeholder="7:00 PM onwards"></div>
+</div>
+<div class="iv-field"><label for="venue">Venue</label><input id="venue" maxlength="100" placeholder="Venue name, city"></div>
+<div class="iv-field"><label for="message">Invitation message</label><textarea id="message" maxlength="220">Together with our families, we invite you to celebrate our special day.</textarea></div>
+<div class="iv-field"><label for="photo">Couple photo (optional)</label><input id="photo" class="iv-file" type="file" accept="image/*"></div>
+<div class="iv-field"><label for="music">Background music (optional, use music you have permission to use)</label><input id="music" class="iv-file" type="file" accept="audio/*"></div>
+<div class="iv-note">Your selected photo and audio are processed in this browser for preview/export. Keep this page open while the video is recording.</div>
+</section>
+<section class="iv-preview-panel">
+<h2>3. Preview your invitation</h2>
+<div class="iv-canvas" id="invitationCanvas" data-theme="royal">
+<img class="iv-photo" id="photoPreview" alt="">
+<div class="iv-canvas-content">
+<div class="iv-ganesh">ॐ</div>
+<div class="iv-invite">Together with our families</div>
+<div class="iv-names"><span id="previewBride">Aarohi</span><div class="iv-and">&</div><span id="previewGroom">Arjun</span></div>
+<div class="iv-rule"></div>
+<div class="iv-date" id="previewDate">Save the Date</div>
+<div class="iv-detail" id="previewTime"></div>
+<div class="iv-detail" id="previewVenue">Your venue will appear here</div>
+<div class="iv-detail" id="previewMessage">Together with our families, we invite you to celebrate our special day.</div>
+<div class="iv-rule"></div>
+<div class="iv-invite">Your presence is our blessing</div>
+</div></div>
+<div class="iv-actions">
+<button class="iv-btn secondary" id="playPreview" type="button">▶ Preview animation</button>
+<button class="iv-btn primary" id="exportVideo" type="button">Export invitation video</button>
+</div>
+<div class="iv-status" id="status" role="status" aria-live="polite"></div>
+<p class="iv-note">Video export uses your browser's recording support. It saves a WebM or MP4 file depending on browser support. Some browsers may not support video recording; you can still preview and use this design as a service request.</p>
+</section>
+</div>
+</main>
+<footer><p>The Smart Way to Get Things Done</p><p>© 2026. All Rights Reserved.</p></footer>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const canvas=$('invitationCanvas'),status=$('status');
+let theme='royal',photoUrl='',audioUrl='',audioElement=null,animationTimer=null;
+const fields=['bride','groom','weddingDate','weddingTime','venue','message'];
+function formattedDate(value){if(!value)return 'Save the Date';const d=new Date(value+'T00:00:00');return d.toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'});}
+function update(){
+$('previewBride').textContent=$('bride').value.trim()||'Bride';
+$('previewGroom').textContent=$('groom').value.trim()||'Groom';
+$('previewDate').textContent=formattedDate($('weddingDate').value);
+$('previewTime').textContent=$('weddingTime').value.trim();
+$('previewVenue').textContent=$('venue').value.trim()||'Your venue will appear here';
+$('previewMessage').textContent=$('message').value.trim();
+}
+fields.forEach(id=>$(id).addEventListener('input',update));
+document.querySelectorAll('.iv-template').forEach(btn=>btn.addEventListener('click',()=>{
+theme=btn.dataset.theme;canvas.dataset.theme=theme;
+document.querySelectorAll('.iv-template').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
+}));
+$('photo').addEventListener('change',e=>{
+if(photoUrl)URL.revokeObjectURL(photoUrl);
+const file=e.target.files&&e.target.files[0];photoUrl=file?URL.createObjectURL(file):'';
+$('photoPreview').src=photoUrl;
+});
+$('music').addEventListener('change',e=>{
+if(audioUrl)URL.revokeObjectURL(audioUrl);
+const file=e.target.files&&e.target.files[0];audioUrl=file?URL.createObjectURL(file):'';
+if(audioElement){audioElement.pause();audioElement=null;}
+if(audioUrl){audioElement=new Audio(audioUrl);audioElement.loop=true;}
+});
+function animate(){
+canvas.animate([{transform:'scale(.97)',opacity:.8},{transform:'scale(1)',opacity:1}],{duration:1000,easing:'ease-out'});
+canvas.querySelector('.iv-canvas-content').animate([{opacity:0,transform:'translateY(16px)'},{opacity:1,transform:'translateY(0)'}],{duration:1500,easing:'ease-out'});
+}
+$('playPreview').addEventListener('click',()=>{
+if(animationTimer)clearInterval(animationTimer);
+animate();animationTimer=setInterval(animate,3000);
+status.textContent='Preview animation playing.';
+});
+function loadImage(src){return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src=src;});}
+async function exportVideo(){
+const button=$('exportVideo');button.disabled=true;
+try{
+if(!window.MediaRecorder||!HTMLCanvasElement.prototype.captureStream){throw new Error('Video recording is not supported in this browser. Try the latest Chrome or Edge.');}
+const width=720,height=1280,draw=document.createElement('canvas');draw.width=width;draw.height=height;
+const ctx=draw.getContext('2d');
+let photo=null;if(photoUrl)photo=await loadImage(photoUrl);
+const bride=$('bride').value.trim()||'Bride',groom=$('groom').value.trim()||'Groom';
+const date=formattedDate($('weddingDate').value),time=$('weddingTime').value.trim();
+const venue=$('venue').value.trim()||'Venue details to follow',message=$('message').value.trim();
+const palettes={royal:['#3b1027','#8c354e','#fae8b7'],blush:['#edc3c9','#fff0e8','#78424c'],ivory:['#cfb578','#fff9e8','#624817']};
+const [base,glow,ink]=palettes[theme];let frame=0;
+function renderFrame(){
+const g=ctx.createRadialGradient(360,360,60,360,640,900);g.addColorStop(0,glow);g.addColorStop(1,base);ctx.fillStyle=g;ctx.fillRect(0,0,width,height);
+if(photo){ctx.save();ctx.globalAlpha=.17;const scale=Math.max(width/photo.width,height/photo.height);const w=photo.width*scale,h=photo.height*scale;ctx.drawImage(photo,(width-w)/2,(height-h)/2,w,h);ctx.restore();}
+ctx.strokeStyle=ink;ctx.lineWidth=3;ctx.strokeRect(35,35,width-70,height-70);
+ctx.textAlign='center';ctx.fillStyle=ink;ctx.shadowColor='rgba(0,0,0,.12)';ctx.shadowBlur=10;
+ctx.font='58px Georgia';ctx.fillText('ॐ',360,205);
+ctx.font='italic 27px Georgia';ctx.letterSpacing='5px';ctx.fillText('TOGETHER WITH OUR FAMILIES',360,285);
+ctx.font='66px Georgia';ctx.letterSpacing='0px';wrapText(ctx,bride,360,440,640,76);
+ctx.font='italic 38px Georgia';ctx.fillText('&',360,515);
+ctx.font='66px Georgia';wrapText(ctx,groom,360,610,640,76);
+ctx.shadowBlur=0;ctx.fillRect(210,665,300,2);
+ctx.font='32px Georgia';ctx.fillText(date,360,735);
+ctx.font='27px Georgia';if(time)ctx.fillText(time,360,785);
+ctx.font='28px Georgia';wrapText(ctx,venue,360,870,590,39);
+ctx.font='italic 25px Georgia';wrapText(ctx,message,360,1010,570,37);
+ctx.font='24px Georgia';ctx.fillText('YOUR PRESENCE IS OUR BLESSING',360,1160);
+ctx.font='18px Arial';ctx.fillText('TASK-WINDOW • DIGITAL INVITATION',360,1210);
+}
+function wrapText(context,text,x,y,maxWidth,lineHeight){const words=String(text).split(' ');let line='',lines=[];for(const word of words){const test=line?line+' '+word:word;if(context.measureText(test).width>maxWidth&&line){lines.push(line);line=word;}else line=test;}if(line)lines.push(line);const start=y-((lines.length-1)*lineHeight)/2;lines.forEach((l,i)=>context.fillText(l,x,start+i*lineHeight));}
+const stream=draw.captureStream(30);let audioContext=null;
+if(audioElement&&audioUrl){
+try{audioContext=new(window.AudioContext||window.webkitAudioContext)();const source=audioContext.createMediaElementSource(audioElement);const dest=audioContext.createMediaStreamDestination();source.connect(dest);source.connect(audioContext.destination);dest.stream.getAudioTracks().forEach(t=>stream.addTrack(t));await audioContext.resume();await audioElement.play();}catch(err){console.warn('Audio could not be included:',err);}
+}
+const mime=['video/mp4;codecs=h264','video/webm;codecs=vp9','video/webm'].find(t=>MediaRecorder.isTypeSupported(t))||'';
+const recorder=new MediaRecorder(stream,mime?{mimeType:mime}:undefined),chunks=[];
+recorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+const stopped=new Promise((resolve,reject)=>{recorder.onstop=resolve;recorder.onerror=()=>reject(new Error('The browser could not finish recording.'));});
+renderFrame();recorder.start();
+let interval=setInterval(()=>{frame++;renderFrame();if(frame>=89){clearInterval(interval);recorder.stop();}},1000/30);
+status.textContent='Creating your invitation video…';
+await stopped;
+if(audioElement)audioElement.pause();
+if(audioContext)await audioContext.close();
+stream.getTracks().forEach(t=>t.stop());
+const blob=new Blob(chunks,{type:recorder.mimeType||'video/webm'});
+const url=URL.createObjectURL(blob),a=document.createElement('a');
+const ext=blob.type.includes('mp4')?'mp4':'webm';a.href=url;a.download='task-window-invitation.'+ext;document.body.appendChild(a);a.click();a.remove();
+setTimeout(()=>URL.revokeObjectURL(url),60000);
+status.textContent='Your invitation video has been downloaded.';
+}catch(err){console.error(err);status.textContent=err.message||'Unable to export video in this browser.';}
+finally{button.disabled=false;}
+}
+$('exportVideo').addEventListener('click',exportVideo);
+update();
+})();
+</script>
+</body></html>
