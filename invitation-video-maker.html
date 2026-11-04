@@ -53,7 +53,7 @@
 .iv-canvas .iv-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.17;z-index:-1}
 .iv-canvas-content{position:relative;z-index:1;width:100%;text-shadow:0 2px 8px rgba(0,0,0,.2)}
 .iv-canvas[data-theme=blush] .iv-canvas-content,.iv-canvas[data-theme=ivory] .iv-canvas-content{text-shadow:none}
-.iv-ganesh{font-size:34px;margin-bottom:10px}.iv-invite{font:italic 14px Georgia,serif;letter-spacing:2px;text-transform:uppercase}.iv-names{font:clamp(29px,6vw,39px) Georgia,serif;line-height:1.08;margin:14px 0}.iv-and{font:italic 18px Georgia,serif;margin:2px}.iv-rule{height:1px;width:56%;background:currentColor;opacity:.7;margin:15px auto}.iv-date{font:16px Georgia,serif;letter-spacing:1px}.iv-detail{font:12px/1.65 Georgia,serif;margin-top:13px;white-space:pre-line}
+ .iv-ganesh{width:47px;height:47px;margin:0 auto 8px;display:grid;place-items:center}.iv-ganesh svg{width:100%;height:100%;overflow:visible}.iv-wedding-art{display:block;width:min(100%,230px);height:auto;margin:10px auto 0;opacity:.92;filter:drop-shadow(0 1px 1px rgba(0,0,0,.08))}.iv-canvas[data-theme=blush] .iv-wedding-art,.iv-canvas[data-theme=ivory] .iv-wedding-art,.iv-canvas[data-theme=watercolor] .iv-wedding-art{opacity:.82}.iv-invite{font:italic 14px Georgia,serif;letter-spacing:2px;text-transform:uppercase}.iv-invite{font:italic 14px Georgia,serif;letter-spacing:2px;text-transform:uppercase}.iv-names{font:clamp(29px,6vw,39px) Georgia,serif;line-height:1.08;margin:14px 0}.iv-and{font:italic 18px Georgia,serif;margin:2px}.iv-rule{height:1px;width:56%;background:currentColor;opacity:.7;margin:15px auto}.iv-date{font:16px Georgia,serif;letter-spacing:1px}.iv-detail{font:12px/1.65 Georgia,serif;margin-top:13px;white-space:pre-line}
 .iv-actions{display:flex;gap:10px;flex-wrap:wrap}.iv-btn{border:0;border-radius:9px;padding:12px 16px;font-weight:800;cursor:pointer}.iv-btn.primary{background:linear-gradient(135deg,#e3bd62,#c89424);color:#17233d}.iv-btn.secondary{background:#edf2fa;color:#17365f}.iv-btn:disabled{opacity:.55;cursor:not-allowed}
 .iv-note{font-size:12px;color:#718096;line-height:1.5;margin-top:12px}.iv-status{font-size:13px;color:#315b3c;margin-top:12px;min-height:20px}.iv-file{font-size:13px}
 .iv-topnav{background:#fffdf7}
@@ -108,7 +108,13 @@
 <div class="iv-canvas" id="invitationCanvas" data-theme="royal">
 <img class="iv-photo" id="photoPreview" alt="">
 <div class="iv-canvas-content">
-<div class="iv-ganesh">ॐ</div>
+<div class="iv-ganesh" aria-label="Decorative Ganesh emblem">
+<svg viewBox="0 0 100 100" role="img" aria-label="Lord Ganesh line-art emblem">
+<circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="2.2"/>
+<path d="M31 35c-9-2-15 4-14 12 1 7 8 10 15 7m37-19c9-2 15 4 14 12-1 7-8 10-15 7M34 34c0-10 7-16 16-16s16 6 16 16v9c0 8-7 14-16 14s-16-6-16-14z" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+<path d="M43 37c2-3 5-4 7-4s5 1 7 4M50 57c-2 8 1 14 8 16 7 2 12-3 10-9-1-4-5-5-8-3M36 61c-5 5-5 13 1 17 5 3 12 1 13-5M43 76l-5 8m19-8 5 8M27 55l-8 7m54-7 8 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+<path d="M50 7v8m-4-4h8M15 50h8m54 0h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+</svg></div>
 <div class="iv-invite">Together with our families</div>
 <div class="iv-names"><span id="previewBride">Aarohi</span><div class="iv-and">&</div><span id="previewGroom">Arjun</span></div>
 <div class="iv-rule"></div>
@@ -118,6 +124,21 @@
 <div class="iv-detail" id="previewMessage">Together with our families, we invite you to celebrate our special day.</div>
 <div class="iv-rule"></div>
 <div class="iv-invite">Your presence is our blessing</div>
+<svg class="iv-wedding-art" viewBox="0 0 280 126" role="img" aria-label="Decorative bride and groom beneath a wedding mandap corridor">
+<g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+<path d="M24 116V45Q24 12 58 12h164q34 0 34 33v71M39 116V48q0-22 22-22h158q22 0 22 22v68"/>
+<path d="M13 45h254M35 33l-9-12m219 12 9-12M48 14l-8-8m192 8 8-8"/>
+<path d="M50 116V51m180 65V51M43 51h14m166 0h14M50 62h180"/>
+<path d="M74 116q0-14 14-14t14 14m90 0q0-14 14-14t14 14"/>
+<path d="M110 116V84q0-17 15-17t15 17v32m15 0V84q0-17 15-17t15 17v32"/>
+<circle cx="126" cy="55" r="10"/><circle cx="169" cy="55" r="10"/>
+<path d="M115 52q11-19 22 0m21 0q11-19 22 0M116 66q10 12 20 0m22 0q10 12 20 0"/>
+<path d="M108 84q18-14 36 0l-6 32h-25zm43 0q18-14 36 0l-5 32h-26z"/>
+<path d="M118 75l-8 10m49-10 8 10M132 85l-7 31m28-31 7 31"/>
+<path d="M140 12v-7m-5 4h10M18 84l-8-7m252 7 8-7"/>
+</g>
+<g fill="currentColor"><circle cx="140" cy="15" r="3"/><path d="M30 40l-5-8 10 2zm220 0 5-8-10 2z"/></g>
+</svg>
 </div></div>
 <div class="iv-actions">
 <button class="iv-btn secondary" id="playPreview" type="button">▶ Preview animation</button>
