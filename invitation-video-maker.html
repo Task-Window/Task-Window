@@ -70,25 +70,7 @@
 <section class="iv-heading"><span class="iv-kicker">A new creative service by Task-Window</span><h1>Invitation Video Maker</h1><p>Create a beautiful digital invitation for your special celebration. Personalise the names, date, venue and photo, preview it, then export a short invitation video.</p></section>
 <div class="iv-layout">
 <section class="iv-panel">
-<h2>1. Choose your design</h2>
-<div class="iv-templates" role="group" aria-label="Invitation themes">
-<button class="iv-template" type="button" data-theme="royal" aria-pressed="true"><span class="iv-swatch royal">❀</span>Royal Maroon</button>
-<button class="iv-template" type="button" data-theme="blush" aria-pressed="false"><span class="iv-swatch blush">✿</span>Blush Floral</button>
-<button class="iv-template" type="button" data-theme="ivory" aria-pressed="false"><span class="iv-swatch ivory">✧</span>Ivory Gold</button>
-<button class="iv-template" type="button" data-theme="emerald" aria-pressed="false"><span class="iv-swatch emerald">❋</span>Emerald Royale</button>
-<button class="iv-template" type="button" data-theme="peacock" aria-pressed="false"><span class="iv-swatch peacock">❖</span>Peacock Blue</button>
-<button class="iv-template" type="button" data-theme="lavender" aria-pressed="false"><span class="iv-swatch lavender">✿</span>Lavender Dream</button>
-<button class="iv-template" type="button" data-theme="temple" aria-pressed="false"><span class="iv-swatch temple">ॐ</span>Temple Classic</button>
-<button class="iv-template" type="button" data-theme="minimal" aria-pressed="false"><span class="iv-swatch minimal">✦</span>Minimal Chic</button>
-<button class="iv-template" type="button" data-theme="sunset" aria-pressed="false"><span class="iv-swatch sunset">❀</span>Sunset Romance</button>
-<button class="iv-template" type="button" data-theme="garden" aria-pressed="false"><span class="iv-swatch garden">❧</span>Garden Vines</button>
-<button class="iv-template" type="button" data-theme="artdeco" aria-pressed="false"><span class="iv-swatch artdeco">◇</span>Art Deco Luxe</button>
-<button class="iv-template" type="button" data-theme="watercolor" aria-pressed="false"><span class="iv-swatch watercolor">❀</span>Watercolour Bloom</button>
-<button class="iv-template" type="button" data-theme="mandala" aria-pressed="false"><span class="iv-swatch mandala">✺</span>Mandala Grace</button>
-<button class="iv-template" type="button" data-theme="boho" aria-pressed="false"><span class="iv-swatch boho">☼</span>Terracotta Boho</button>
-<button class="iv-template" type="button" data-theme="celestial" aria-pressed="false"><span class="iv-swatch celestial">☾</span>Celestial Night</button>
-</div>
-<h2>2. Add your details</h2>
+<h2>1. Add your details</h2>
 <div class="iv-two">
 <div class="iv-field"><label for="bride">Bride's name</label><input id="bride" maxlength="35" value="Aarohi"></div>
 <div class="iv-field"><label for="groom">Groom's name</label><input id="groom" maxlength="35" value="Arjun"></div>
@@ -104,7 +86,7 @@
 <div class="iv-note">Your selected photo and audio are processed in this browser for preview/export. Keep this page open while the video is recording.</div>
 </section>
 <section class="iv-preview-panel">
-<h2>3. Preview your invitation</h2>
+<h2>2. Preview your invitation</h2>
 <div class="iv-canvas" id="invitationCanvas" data-theme="royal">
 <img class="iv-photo" id="photoPreview" alt="">
 <div class="iv-canvas-content">
@@ -187,7 +169,7 @@
 (function(){
 const $=id=>document.getElementById(id);
 const canvas=$('invitationCanvas'),status=$('status');
-let theme='royal',photoUrl='',audioUrl='',audioElement=null,animationTimer=null;
+let photoUrl='',audioUrl='',audioElement=null,animationTimer=null;
 const fields=['bride','groom','weddingDate','weddingTime','venue','message'];
 function formattedDate(value){if(!value)return 'Save the Date';const d=new Date(value+'T00:00:00');return d.toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'});}
 function update(){
@@ -199,10 +181,6 @@ $('previewVenue').textContent=$('venue').value.trim()||'Your venue will appear h
 $('previewMessage').textContent=$('message').value.trim();
 }
 fields.forEach(id=>$(id).addEventListener('input',update));
-document.querySelectorAll('.iv-template').forEach(btn=>btn.addEventListener('click',()=>{
-theme=btn.dataset.theme;canvas.dataset.theme=theme;
-document.querySelectorAll('.iv-template').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
-}));
 $('photo').addEventListener('change',e=>{
 if(photoUrl)URL.revokeObjectURL(photoUrl);
 const file=e.target.files&&e.target.files[0];photoUrl=file?URL.createObjectURL(file):'';
@@ -234,8 +212,7 @@ let photo=null;if(photoUrl)photo=await loadImage(photoUrl);
 const bride=$('bride').value.trim()||'Bride',groom=$('groom').value.trim()||'Groom';
 const date=formattedDate($('weddingDate').value),time=$('weddingTime').value.trim();
 const venue=$('venue').value.trim()||'Venue details to follow',message=$('message').value.trim();
-const palettes={royal:['#3b1027','#8c354e','#fae8b7'],blush:['#edc3c9','#fff0e8','#78424c'],ivory:['#cfb578','#fff9e8','#624817'],emerald:['#063f36','#17816c','#f5d98b'],peacock:['#063c55','#087c91','#f5d98b'],lavender:['#55416f','#c1a5d8','#fff0d7'],temple:['#8a4a16','#d39a37','#fff1c7'],minimal:['#e9e4d9','#fffdf7','#35445c'],sunset:['#722c43','#e78b69','#fff0cf']};
-const [base,glow,ink]=palettes[theme];let frame=0;
+const [base,glow,ink]=['#3b1027','#8c354e','#fae8b7'];let frame=0;
 function renderFrame(){
 const g=ctx.createRadialGradient(360,360,60,360,640,900);g.addColorStop(0,glow);g.addColorStop(1,base);ctx.fillStyle=g;ctx.fillRect(0,0,width,height);
 if(photo){ctx.save();ctx.globalAlpha=.17;const scale=Math.max(width/photo.width,height/photo.height);const w=photo.width*scale,h=photo.height*scale;ctx.drawImage(photo,(width-w)/2,(height-h)/2,w,h);ctx.restore();}
