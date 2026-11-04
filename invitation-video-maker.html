@@ -57,6 +57,7 @@
 .iv-actions{display:flex;gap:10px;flex-wrap:wrap}.iv-btn{border:0;border-radius:9px;padding:12px 16px;font-weight:800;cursor:pointer}.iv-btn.primary{background:linear-gradient(135deg,#e3bd62,#c89424);color:#17233d}.iv-btn.secondary{background:#edf2fa;color:#17365f}.iv-btn:disabled{opacity:.55;cursor:not-allowed}
 .iv-note{font-size:12px;color:#718096;line-height:1.5;margin-top:12px}.iv-status{font-size:13px;color:#315b3c;margin-top:12px;min-height:20px}.iv-file{font-size:13px}
 .iv-topnav{background:#fffdf7}
+.iv-preview-panel{display:none}
 @media(max-width:850px){.iv-layout{grid-template-columns:1fr}.iv-preview-panel{order:-1}}
 @media(max-width:480px){.iv-panel,.iv-preview-panel{padding:17px}.iv-two{grid-template-columns:1fr}.iv-wrap{padding:34px 14px 55px}}
 </style>
@@ -67,7 +68,7 @@
 <nav aria-label="Main navigation"><a href="index.html">Home</a><a href="how-it-works.html">How It Works</a><a href="browse-tasks.html">Browse Tasks</a><a href="login.html">Login</a></nav>
 </header>
 <main class="iv-wrap">
-<section class="iv-heading"><span class="iv-kicker">A new creative service by Task-Window</span><h1>Invitation Video Maker</h1><p>Create a beautiful digital invitation for your special celebration. Personalise the names, date, venue and photo, preview it, then export a short invitation video.</p><p style="margin:18px auto 0"><a href="https://wa.me/919439206408?text=Hello%2C%20I%20would%20like%20to%20request%20a%20sample%20invitation%20video." target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border-radius:9px;background:#16834a;color:#fff;font-weight:800;text-decoration:none;box-shadow:0 7px 18px rgba(22,131,74,.2)">Request a Sample on WhatsApp</a></p></section>
+<section class="iv-heading"><span class="iv-kicker">A new creative service by Task-Window</span><h1>Invitation Video Maker</h1><p>Create a beautiful digital invitation for your special celebration. Add your details, photo and music, then export your invitation video.</p><p style="margin:18px auto 0"><a href="https://wa.me/919439206408?text=Hello%2C%20I%20would%20like%20to%20request%20a%20sample%20invitation%20video." target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border-radius:9px;background:#16834a;color:#fff;font-weight:800;text-decoration:none;box-shadow:0 7px 18px rgba(22,131,74,.2)">Request a Sample on WhatsApp</a></p></section>
 <div class="iv-layout">
 <section class="iv-panel">
 <h2>1. Add your details</h2>
@@ -83,9 +84,13 @@
 <div class="iv-field"><label for="message">Invitation message</label><textarea id="message" maxlength="220">Together with our families, we invite you to celebrate our special day.</textarea></div>
 <div class="iv-field"><label for="photo">Couple photo (optional)</label><input id="photo" class="iv-file" type="file" accept="image/*"></div>
 <div class="iv-field"><label for="music">Background music (optional, use music you have permission to use)</label><input id="music" class="iv-file" type="file" accept="audio/*"></div>
-<div class="iv-note">Your selected photo and audio are processed in this browser for preview/export. Keep this page open while the video is recording.</div>
+<div class="iv-note">Your selected photo and audio are processed in this browser while your invitation video is created. Keep this page open during export.</div>
+<div class="iv-actions">
+<button class="iv-btn primary" id="exportVideo" type="button">Create &amp; Export Invitation Video</button>
+</div>
+<div class="iv-status" id="status" role="status" aria-live="polite"></div>
 </section>
-<section class="iv-preview-panel">
+<section class="iv-preview-panel" aria-hidden="true">
 <h2>2. Preview your invitation</h2>
 <div class="iv-canvas" id="invitationCanvas" data-theme="royal">
 <img class="iv-photo" id="photoPreview" alt="">
@@ -146,12 +151,7 @@
 <g fill="currentColor"><path d="M140 13l4 8h-8z"/><circle cx="140" cy="25" r="2.5"/><path d="M29 82l-7-9 12 2zm222 0 7-9-12 2z"/></g>
 </svg>
 </div></div>
-<div class="iv-actions">
-<button class="iv-btn secondary" id="playPreview" type="button">▶ Preview animation</button>
-<button class="iv-btn primary" id="exportVideo" type="button">Export invitation video</button>
-</div>
-<div class="iv-status" id="status" role="status" aria-live="polite"></div>
-<p class="iv-note">Video export uses your browser's recording support. It saves a WebM or MP4 file depending on browser support. Some browsers may not support video recording; you can still preview and use this design as a service request.</p>
+<p class="iv-note">The invitation design is prepared in the background for video export.</p>
 </section>
 </div>
 <section class="iv-offer" aria-labelledby="offer-title"><span class="iv-offer-tag">75% OFF • LIMITED-TIME OFFER</span><h2 id="offer-title">Any Type of Digital Invitation</h2><p>Wedding, engagement, birthday, anniversary or any special occasion.</p><div class="iv-star-box" aria-label="Offer price ₹875, reduced from ₹3,500, saving ₹2,625"><div class="iv-offer-price"><strong>₹875</strong><span>ONLY<br>PER INVITATION</span></div><div class="iv-old-price">₹3,500</div><div class="iv-saving">You save ₹2,625</div></div><a class="iv-btn primary" href="post-task-choice.html">Get Your Digital Invitation →</a></section>
@@ -169,7 +169,7 @@
 (function(){
 const $=id=>document.getElementById(id);
 const canvas=$('invitationCanvas'),status=$('status');
-let photoUrl='',audioUrl='',audioElement=null,animationTimer=null;
+let photoUrl='',audioUrl='',audioElement=null;
 const fields=['bride','groom','weddingDate','weddingTime','venue','message'];
 function formattedDate(value){if(!value)return 'Save the Date';const d=new Date(value+'T00:00:00');return d.toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'});}
 function update(){
